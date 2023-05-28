@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useId} from 'react';
 import styled from 'styled-components';
 import {LETTERS_PER_WORD} from '../../../constants';
 import Keyboard from './Keyboard';
@@ -12,21 +12,22 @@ const GuessInput = ({
   onKeyDown,
 }) => {
   const [guessInput, setGuessInput] = useState('');
+  const id = useId();
 
   const changeGuess = evt => setGuessInput(evt.target.value.toUpperCase());
   const submitGuess = evt => {
     evt.preventDefault();
-    addGuess(guessInput);
     setGuessInput('');
+    addGuess(guessInput);
   };
 
   return (
     <form onSubmit={submitGuess} className={className}>
-      <label htmlFor='guess-input'>Type your guess:</label>
+      <label htmlFor={`${id}-guess-input`}>Type your guess:</label>
       <input
         type='text'
         required
-        id='guess-input'
+        id={`${id}-guess-input`}
         dir='auto'
         autoComplete='off'
         value={guessInput}
