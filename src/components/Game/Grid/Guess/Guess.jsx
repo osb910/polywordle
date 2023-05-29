@@ -1,32 +1,48 @@
-import styled from 'styled-components';
-import {isRtlScript} from '../../../../utils';
-import {flipInX} from '../../../animations/keyframes';
+import {useContext} from 'react';
+import styled, {ThemeProvider} from 'styled-components';
+import AppContext from '../../../../lib/app-context';
+import {closeGap, flipInX} from '../../../animations/keyframes';
+import GameContext from '../../../../lib/game-context';
+import {isKashidable, kashidify} from '../../../../lib/utils';
 
-const Guess = ({word, className, key}) => (
-  <ul dir='auto' className={className}>
-    {word.map(({letter, status}, idx) => (
-      <li className={`cell ${status}`} key={`${key}-${idx}`}>
-        {letter}
-      </li>
-    ))}
-  </ul>
-);
+const Guess = ({word, step, className, key}) => {
+  const {lang} = useContext(AppContext);
+  const {step: gameStep, gameOver} = useContext(GameContext);
+  return (
+    <ul
+      className={`${className} ${
+        step < gameStep || (step === gameStep && gameOver) ? 'done' : ''
+      }`}
+      lang={lang}
+    >
+      {word.map(({letter, status}, idx, arr) => (
+        <li className={`cell ${status}`} key={`${key}-${idx}`}>
+          {isKashidable(arr[idx - 1]?.letter) ? '\u0640' : ''}
+          {idx === arr.length - 1 ? letter : kashidify(letter)}
+        </li>
+      ))}
+    </ul>
+  );
+};
 
 const StyledGuess = styled(Guess)`
   padding: 0;
+  margin: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 6px;
   list-style: none;
+  flex: 0;
+
+  &.done {
+    animation: 500ms ease-in both ${closeGap};
+    animation-delay: 1.8s;
+  }
 
   &::before {
-    content: ${({word, step}) =>
-      `'${
-        word.some(({letter}) => isRtlScript(letter))
-          ? (+step).toLocaleString('ar-EG')
-          : step
-      }'`};
+    content: ${({theme, step}) =>
+      `'${theme.lang === 'ar' ? (+step).toLocaleString('ar-EG') : step}'`};
     position: absolute;
     z-index: -1;
     inset-inline-start: -0.75em;
@@ -39,17 +55,16 @@ const StyledGuess = styled(Guess)`
 
   & > .cell {
     position: relative;
-    width: 3rem;
-    height: 3rem;
+    width: 2.5rem;
+    height: 2.5rem;
     display: grid;
     place-content: center;
     aspect-ratio: 1 / 1;
     border: 2px solid var(--color-gray-700);
-    font-size: 2rem;
+    font-size: 1.75rem;
     transition: all 200ms ease-out;
     animation: 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) both ${flipInX};
     --radius: 6px;
-    /* scale: 1.1; */
   }
 
   & > .cell:nth-child(2) {
@@ -112,4 +127,14 @@ const StyledGuess = styled(Guess)`
   }
 `;
 
-export default StyledGuess;
+const GuessWithContext = ({word, step}) => {
+  const {lang, lettersPerWord} = useContext(AppContext);
+
+  return (
+    <ThemeProvider theme={{lang, lettersPerWord}}>
+      <StyledGuess word={word} step={step} />
+    </ThemeProvider>
+  );
+};
+
+export default GuessWithContext;

@@ -1,36 +1,68 @@
 import {useCallback, useEffect, useState} from 'react';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import {flipInX} from '../../../animations/keyframes';
+import {useContext} from 'react';
+import AppContext from '../../../../lib/app-context';
+import GameContext from '../../../../lib/game-context';
+import {game} from '../../../../lib/ui-text';
 
-const Keyboard = ({className, onClick, guesses, step, gameOver}) => {
-  const keys = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'];
+const Keyboard = ({className, onClick}) => {
+  const {lang} = useContext(AppContext);
+  const {guesses, step, numOfAttempts, lettersPerWord} =
+    useContext(GameContext);
+  const uiText = game[lang];
+  const keys = uiText.keyboard;
   const [letterStatus, setLetterStatus] = useState([]);
   const [activeKeys, setActiveKeys] = useState([]);
-  useEffect(() => {
-    if (gameOver) return setLetterStatus([]);
-    if (step === 1) return;
-    const prevGuess = [...guesses[step - 2].word].map(({letter, status}) => ({
-      letter: letter.toLowerCase(),
-      status,
-    }));
 
-    setLetterStatus(current =>
-      [...prevGuess, ...current].sort(({status}) =>
-        status === 'correct' ? -1 : 1
-      )
-    );
-  }, [step, gameOver]);
+  useEffect(() => {
+    const prevStatus = [];
+    for (let i = 0; i < step - 1; i++) {
+      const guess = [...guesses[i].word];
+      guess.forEach(item => {
+        if (
+          prevStatus.some(
+            ({letter, status}) =>
+              item.letter === letter && item.status === status
+          )
+        ) {
+          return;
+        }
+        prevStatus.unshift(item);
+      });
+    }
+    setLetterStatus(prevStatus);
+  }, [lang, numOfAttempts, lettersPerWord]);
+
+  useEffect(() => {
+    if (step === 1) return;
+    const prevGuess = [...guesses[step - 2].word];
+
+    setLetterStatus(current => {
+      const newStatus = [...current];
+      prevGuess.forEach(item => {
+        if (
+          current.some(
+            ({letter, status}) =>
+              item.letter === letter && item.status === status
+          )
+        ) {
+          return;
+        }
+        newStatus.unshift(item);
+      });
+      return newStatus.sort(({status}) => (status === 'correct' ? -1 : 1));
+    });
+  }, [step]);
 
   const handleActiveKeys = useCallback(
     evt => {
-      const {key} = evt;
-      if (key === 'Enter') return;
-      if (key === 'Backspace') return;
-      if (key.length === 1 && !activeKeys.includes(key)) {
-        setActiveKeys(prev => [...prev, key]);
-      }
+      let {key} = evt;
+      key = key === 'Enter' || key === '⌫' ? key : key.toUpperCase();
+      if (activeKeys.includes(key)) return;
+      setActiveKeys(prev => [...prev, key]);
     },
-    [activeKeys]
+    [activeKeys, lang]
   );
 
   useEffect(() => {
@@ -40,17 +72,15 @@ const Keyboard = ({className, onClick, guesses, step, gameOver}) => {
 
   const handleKeyUp = useCallback(
     evt => {
-      const {key} = evt;
-      if (key === 'Enter') return;
-      if (key === 'Backspace') return;
-      if (key.length === 1 && activeKeys.includes(key)) {
-        setTimeout(
-          () => setActiveKeys(prev => prev.filter(letter => letter !== key)),
-          200
-        );
-      }
+      let {key} = evt;
+      key = key === 'Enter' || key === '⌫' ? key : key.toUpperCase();
+      if (!activeKeys.includes(key)) return;
+      setTimeout(
+        () => setActiveKeys(prev => prev.filter(letter => letter !== key)),
+        200
+      );
     },
-    [activeKeys]
+    [activeKeys, lang]
   );
 
   useEffect(() => {
@@ -58,21 +88,48 @@ const Keyboard = ({className, onClick, guesses, step, gameOver}) => {
     return () => window.removeEventListener('keyup', handleKeyUp);
   }, [handleKeyUp]);
 
+  const getKeyName = key =>
+    /[⮐⮑]/.test(key)
+      ? 'Enter'
+      : /[⌫⌦]/.test(key)
+      ? 'Backspace'
+      : key.toUpperCase();
+
   return (
     <section className={className}>
       {keys.map((row, idx) => (
         <div key={idx} className='row'>
-          {row.split('').map(key => (
+          {row.map(key => (
             <button
-              className={`
-                ${letterStatus.find(({letter}) => letter === key)?.status} ${
-                activeKeys.includes(key) ? 'active' : ''
+              className={`${
+                letterStatus.find(({letter}) => letter === key)?.status ?? ''
+              } ${activeKeys.includes(getKeyName(key)) ? 'active' : ''}`}
+              style={
+                /[⮐⮑⌫⌦]/.test(key)
+                  ? {
+                      width:
+                        lang === 'ar'
+                          ? '4.5rem'
+                          : key === '⮐'
+                          ? '6.5rem'
+                          : 'initial',
+                      fontSize: '1.5rem',
+                      fontFamily: 'monospace',
+                      backgroundColor: /[⮐⮑]/.test(key)
+                        ? 'rgb(0, 123, 255)'
+                        : '#f55',
+                    }
+                  : {}
               }
-              `}
-              data-letter={`${key.toUpperCase()}`}
+              data-letter={getKeyName(key)}
               type='button'
               key={key}
-              onClick={evt => onClick({...evt, key})}
+              onClick={evt =>
+                onClick({
+                  ...evt,
+                  key: getKeyName(key),
+                })
+              }
             >
               <kbd>{key.toUpperCase()}</kbd>
             </button>
@@ -86,29 +143,42 @@ const Keyboard = ({className, onClick, guesses, step, gameOver}) => {
 const StyledKeyboard = styled(Keyboard)`
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
+  font-size: 1.25rem;
+  font-family: monospace;
+  ${({lang}) =>
+    lang === 'ar'
+      ? css`
+          font-family: 'Uthman Taha';
+          font-weight: 700;
+          font-size: 1.4rem;
+        `
+      : ''}
 
   & > .row {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
   }
 
   & > .row > button {
     flex: 0 0 auto;
-    width: 2rem;
-    height: 2rem;
+    width: 2.25rem;
+    height: 2.25rem;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 4px;
     background-color: var(--color-gray-900);
-    font-size: 1.25rem;
     font-weight: bold;
     color: var(--color-gray-100);
     cursor: pointer;
     transition: all 200ms ease-out;
+  }
+
+  & > .row > button kbd {
+    font-family: inherit;
   }
 
   &

@@ -2,6 +2,8 @@ import styled, {createGlobalStyle} from 'styled-components';
 import Header from './components/Header';
 import Game from './components/Game';
 import './App.css';
+import {useContext} from 'react';
+import AppContext from './lib/app-context';
 
 const GlobalStyle = createGlobalStyle`
   html {
@@ -80,9 +82,10 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-function App({className}) {
+const App = ({className}) => {
+  const {lang} = useContext(AppContext);
   return (
-    <div className={className}>
+    <div className={`${className} ${lang === 'ar' ? 'rtl' : ''}`}>
       <GlobalStyle />
       <Header />
       <main>
@@ -90,23 +93,41 @@ function App({className}) {
       </main>
     </div>
   );
-}
+};
 
 const StyledApp = styled(App)`
-  padding-inline: 1em;
+  padding-inline: 2em;
   display: flex;
   flex-direction: column;
   min-height: 100%;
+  height: 100vh;
+  transition: all 400ms ease;
 
   & > main {
     flex: 1;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
     gap: var(--game-spacing);
     padding: var(--game-spacing) 32px;
     margin: 0 auto;
     min-width: 250px;
     max-width: min(500px, 58vh, 100%);
+  }
+
+  &.rtl {
+    direction: rtl;
+    font-family: 'Lotus';
+    font-size: 1.15rem;
+  }
+
+  :not(.rtl) :where(h1, h2, h3, h4, h5, h6) {
+    font-family: 'PT Serif', serif;
+  }
+
+  &.rtl :where(h1, h2, h3, h4, h5, h6) {
+    font-family: 'Uthman Taha';
   }
 `;
 

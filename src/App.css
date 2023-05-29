@@ -5,6 +5,36 @@
   text-align: center;
 }
 
+#root .rtl {
+  /* font-family: 'Uthman Taha'; */
+}
+
+@font-face {
+  font-family: 'Uthman Taha';
+  src: local('KFGQPC Uthman Taha Naskh'),
+    url('./assets/fonts/UthmanTN1\ Ver10.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Uthman Taha';
+  font-weight: 700;
+  src: local('KFGQPC Uthman Taha Naskh'),
+    url('./assets/fonts/UthmanTN1B\ Ver10.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Lotus';
+  src: local('adwa-assalaf'),
+    url('./assets/fonts/adwa-assalaf.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Lotus';
+  font-weight: 700;
+  src: local('adwa-assalaf'),
+    url('./assets/fonts/adwa-assalaf.ttf') format('truetype');
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;
