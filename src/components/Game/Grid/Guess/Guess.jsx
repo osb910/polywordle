@@ -37,7 +37,7 @@ const StyledGuess = styled(Guess)`
 
   &.done {
     animation: 500ms ease-in both ${closeGap};
-    animation-delay: 1.8s;
+    animation-delay: 1.75s;
   }
 
   &::before {
@@ -61,7 +61,7 @@ const StyledGuess = styled(Guess)`
     place-content: center;
     aspect-ratio: 1 / 1;
     border: 2px solid var(--color-gray-700);
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     transition: all 200ms ease-out;
     animation: 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) both ${flipInX};
     --radius: 6px;
