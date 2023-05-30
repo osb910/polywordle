@@ -10,7 +10,7 @@ const Header = ({className}) => {
   const {resetGame} = useContext(GameContext);
   const uiText = header[lang];
 
-  const handleTranslator = evt => {
+  const handleTranslation = evt => {
     const newLang = evt.target.dataset.lang;
     if (!newLang || lang === newLang) return;
     const confirmReset = confirm(uiText.resetPrompt);
@@ -23,7 +23,10 @@ const Header = ({className}) => {
   return (
     <header className={className}>
       <h1>{uiText.logo}</h1>
-      <Translator lang={lang} changeLang={handleTranslator} />
+      <section className='settings app'>
+        <Translator lang={lang} changeLang={handleTranslation} />
+      </section>
+      {/* <section className='settings game'>Game Settings</section> */}
     </header>
   );
 };
@@ -31,8 +34,9 @@ const Header = ({className}) => {
 const StyledHeader = styled(Header)`
   padding-block: 0.25em;
   margin-block-end: 0.75em;
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  grid-template-areas: 'app-settings title game-settings';
   align-items: center;
   border-bottom: 1px solid var(--color-gray-700);
   color: var(--color-gray-300);
@@ -44,13 +48,24 @@ const StyledHeader = styled(Header)`
   }
 
   & h1 {
-    flex: 1;
+    grid-area: title;
     font-size: 2rem;
-    /* line-height: var(--header-height); */
     text-align: center;
-    justify-self: center;
-    margin: 0 auto;
     padding: 0;
+  }
+
+  & .settings {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  & .settings.app {
+    grid-area: app-settings;
+  }
+
+  & .settings.game {
+    grid-area: game-settings;
   }
 
   @media (max-width: 25rem) {

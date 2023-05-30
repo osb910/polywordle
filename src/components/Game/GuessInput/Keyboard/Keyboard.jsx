@@ -8,7 +8,7 @@ import {game} from '../../../../lib/ui-text';
 
 const Keyboard = ({className, onClick}) => {
   const {lang} = useContext(AppContext);
-  const {guesses, step, numOfAttempts, lettersPerWord} =
+  const {guesses, step, numOfAttempts, lettersPerWord, gameOver} =
     useContext(GameContext);
   const uiText = game[lang];
   const keys = uiText.keyboard;
@@ -32,7 +32,7 @@ const Keyboard = ({className, onClick}) => {
       });
     }
     setLetterStatus(prevStatus);
-  }, [lang, numOfAttempts, lettersPerWord]);
+  }, [lang, numOfAttempts, lettersPerWord, gameOver]);
 
   useEffect(() => {
     if (step === 1) return;
