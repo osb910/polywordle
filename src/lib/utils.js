@@ -45,7 +45,6 @@ export const isKashidable = str => {
 
 export const kashidify = (str, repeat = 1) => {
   const kashida = '\u0640';
-
   const kashidified = str.replace(
     RegExp(`[${kashidableLetters.join('')}]`, 'g'),
     `$&${kashida.repeat(repeat)}`

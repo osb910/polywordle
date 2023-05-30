@@ -75,6 +75,7 @@ const game = {
         </>
       );
     },
+    unknownWord: 'Not in the word list',
   },
   ar: {
     inputLabel: 'اكتب تخمينك:',
@@ -124,6 +125,7 @@ const game = {
         </>
       );
     },
+    unknownWord: 'ليست عندنا',
   },
 };
 
