@@ -45,7 +45,6 @@ const GuessInput = ({className, setError}) => {
       const input = value.toUpperCase();
       if (lang === 'ar' && /[^\p{Script=Arabic}]/u.test(input)) return;
       if (lang === 'en' && /[^A-Za-z]/.test(input)) return;
-      console.log({input});
       setGuessInput(input);
       setGuesses(
         [...guesses].map(guess =>
@@ -84,7 +83,10 @@ const GuessInput = ({className, setError}) => {
       )
     );
 
-    if (word.every(({status}) => status === 'correct')) {
+    shuffle();
+    setGuessInput('');
+
+    if (guessInput === wordle) {
       setGameWon(true);
       setGameOver(true);
       return;
@@ -93,8 +95,6 @@ const GuessInput = ({className, setError}) => {
     setStep(step + 1);
 
     step === numOfAttempts && setGameOver(true);
-    shuffle();
-    setGuessInput('');
   }, [
     guessInput,
     WORDS,
@@ -127,7 +127,6 @@ const GuessInput = ({className, setError}) => {
         if (newInput.length > lettersPerWord) return;
         changeGuess(newInput);
       };
-      console.log({key, which, shiftKey});
       if (gameOver) {
         key === 'Enter' && resetGame(lang);
         return;
