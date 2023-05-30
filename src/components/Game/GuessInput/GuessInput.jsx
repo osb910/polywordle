@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import {useState, useEffect, useContext, useCallback, useId} from 'react';
 import styled from 'styled-components';
 import Keyboard from './Keyboard';
@@ -5,8 +6,8 @@ import AppContext from '../../../lib/app-context';
 import GameContext from '../../../lib/game-context';
 import {game} from '../../../lib/ui-text';
 import {checkGuess} from '../../../lib/game-logic';
-import {range} from '../../../lib/utils';
 import WORDLES from '../../../lib/data/data';
+import shuffleSfx from '../../../assets/sfx/shuffling-cards.mp3';
 
 const GuessInput = ({className, setError}) => {
   const [guessInput, setGuessInput] = useState('');
@@ -24,30 +25,53 @@ const GuessInput = ({className, setError}) => {
     numOfAttempts,
     lettersPerWord,
   } = useContext(GameContext);
-  const uiText = game[lang];
   const id = useId();
+
+  const uiText = game[lang];
   const WORDS = WORDLES[lang][lettersPerWord];
 
-  const changeGuess = evt => {
-    const input = evt.target.value.toUpperCase();
-    if (lang === 'ar' && !/\p{Script=Arabic}/u.test(input)) return;
-    if (lang === 'en' && !/[A-Za-z]/u.test(input)) return;
-    setGuessInput(input);
+  const shuffle = () => {
+    const shuffleEl = document.querySelector('#shuffle-sfx');
+    console.log(shuffleEl);
+    shuffleEl.play();
   };
-  const addGuess = newGuess => {
-    console.log({step});
-    if (!WORDS.includes(newGuess)) {
-      setError('Not in the word list');
-      const newGuesses = [...guesses];
-      newGuesses[step - 1].word = range(lettersPerWord).map(() => ({
-        letter: '',
-        status: '',
-      }));
-      setGuesses(newGuesses);
+
+  useEffect(() => {
+    setGuessInput(guesses[step - 1].word.map(({letter}) => letter).join(''));
+  }, []);
+
+  const changeGuess = useCallback(
+    value => {
+      const input = value.toUpperCase();
+      if (lang === 'ar' && /[^\p{Script=Arabic}]/u.test(input)) return;
+      if (lang === 'en' && /[^A-Za-z]/.test(input)) return;
+      console.log({input});
+      setGuessInput(input);
+      setGuesses(
+        [...guesses].map(guess =>
+          guess.step === step
+            ? {
+                ...guess,
+                word: guess.word.map((_, idx) => ({
+                  letter: input[idx] ?? '',
+                  status: input[idx] ? 'filled' : '',
+                })),
+              }
+            : guess
+        )
+      );
+    },
+    [guesses, lang, setGuesses, step]
+  );
+
+  const submitGuess = useCallback(() => {
+    if (!WORDS.includes(guessInput)) {
+      setError(uiText.unknownWord);
+      changeGuess('');
       return;
     }
 
-    const word = checkGuess(newGuess, wordle);
+    const word = checkGuess(guessInput, wordle);
     setGuesses(
       [...guesses].map(guess =>
         guess.step === step
@@ -65,75 +89,90 @@ const GuessInput = ({className, setError}) => {
       setGameOver(true);
       return;
     }
+
     setStep(step + 1);
 
     step === numOfAttempts && setGameOver(true);
-  };
-  const submitGuess = evt => {
-    evt.preventDefault();
-    addGuess(guessInput);
+    shuffle();
     setGuessInput('');
-  };
+  }, [
+    guessInput,
+    WORDS,
+    guesses,
+    numOfAttempts,
+    setError,
+    setGameOver,
+    setGameWon,
+    setGuesses,
+    setStep,
+    step,
+    wordle,
+    changeGuess,
+    uiText.unknownWord,
+  ]);
 
   const handleKeyDown = useCallback(
     evt => {
-      const {key} = evt;
+      let {key, which, shiftKey} = evt;
+      // key =
+      //   key === 'Unidentified' && which === 66
+      //     ? shiftKey
+      //       ? 'لءا'
+      //       : 'لا'
+      //     : key === 'آ'
+      //     ? 'ءا'
+      //     : key;
+      const pressLetter = letter => {
+        const newInput = guessInput + letter.toUpperCase();
+        if (newInput.length > lettersPerWord) return;
+        changeGuess(newInput);
+      };
+      console.log({key, which, shiftKey});
       if (gameOver) {
         key === 'Enter' && resetGame(lang);
         return;
       }
+
+      // if (
+      //   /Enter|Backspace|\p{L}{1}/u.test(key) &&
+      //   document.activeElement.id === `${id}-guess-input`
+      // )
+      //   return;
       if (key === 'Enter') {
-        if (document.activeElement.id === 'guess-input') return;
-        if (guesses[step - 1].word.some(({letter}) => !letter)) return;
-        guesses[step - 1].word.every(({letter}) => !!letter) &&
-          evt.preventDefault();
-        addGuess(
-          guesses[step - 1].word
-            .map(({letter}) => letter.toUpperCase())
-            .join('')
-        );
-        setGuessInput('');
+        document.activeElement.id === `${id}-guess-input`;
+        if (guessInput < lettersPerWord) return;
+        submitGuess();
         return;
       }
+
       if (key === 'Backspace') {
-        setGuesses(
-          [...guesses].map(guess => {
-            if (guess.step === step) {
-              const newWord = [...guess.word].map((obj, idx, arr) =>
-                !arr[idx + 1]?.letter ? {letter: '', status: ''} : obj
-              );
-              return {
-                ...guess,
-                word: newWord,
-              };
-            } else {
-              return guess;
-            }
-          })
-        );
+        if (document.activeElement.id === `${id}-guess-input`) return;
+        const newInput =
+          guessInput.length === 1
+            ? ''
+            : guessInput
+                .split('')
+                .slice(0, guessInput.length - 1)
+                .join('');
+        changeGuess(newInput);
         return;
       }
+
       if (key.length === 1) {
-        if (lang === 'ar' && !/\p{Script=Arabic}/u.test(key)) return;
-        if (lang === 'en' && !/[A-Za-z]/u.test(key)) return;
-        setGuesses(
-          [...guesses].map(guess => {
-            if (guess.step === step) {
-              const emptyIdx = guess.word.findIndex(({letter}) => !letter);
-              const newWord = [...guess.word];
-              newWord[emptyIdx] = {letter: key.toUpperCase(), status: ''};
-              return {
-                ...guess,
-                word: newWord,
-              };
-            } else {
-              return guess;
-            }
-          })
-        );
+        if (document.activeElement.id === `${id}-guess-input`) return;
+        pressLetter(key);
       }
     },
-    [gameOver, guesses, step]
+    [
+      gameOver,
+      guessInput,
+      lettersPerWord,
+      id,
+      changeGuess,
+      submitGuess,
+      resetGame,
+      lang,
+    ]
   );
 
   useEffect(() => {
@@ -142,7 +181,13 @@ const GuessInput = ({className, setError}) => {
   }, [handleKeyDown]);
 
   return (
-    <form onSubmit={submitGuess} className={className}>
+    <form
+      onSubmit={evt => {
+        evt.preventDefault();
+        submitGuess();
+      }}
+      className={className}
+    >
       <label htmlFor={`${id}-guess-input`}>{uiText.inputLabel}</label>
       <input
         type='text'
@@ -156,9 +201,10 @@ const GuessInput = ({className, setError}) => {
         pattern={`\\p{L}{${lettersPerWord}}`}
         title={`${lettersPerWord} letter word`}
         disabled={gameOver}
-        onInput={changeGuess}
+        onInput={evt => changeGuess(evt.target.value)}
       />
       <Keyboard onClick={handleKeyDown} lang={lang} />
+      <audio id='shuffle-sfx' src={shuffleSfx} preload='auto'></audio>
     </form>
   );
 };

@@ -1,7 +1,7 @@
 import {useContext} from 'react';
 import styled, {ThemeProvider} from 'styled-components';
 import AppContext from '../../../../lib/app-context';
-import {closeGap, flipInX} from '../../../animations/keyframes';
+import {bump, closeGap, flipInX} from '../../../animations/keyframes';
 import GameContext from '../../../../lib/game-context';
 import {isKashidable, kashidify} from '../../../../lib/utils';
 
@@ -67,32 +67,37 @@ const StyledGuess = styled(Guess)`
     --radius: 6px;
   }
 
-  & > .cell:nth-child(2) {
+  &.done > .cell:nth-child(2) {
     animation-delay: 0.4s;
   }
 
-  & > .cell:nth-child(3) {
+  &.done > .cell:nth-child(3) {
     animation-delay: 0.8s;
   }
 
-  & > .cell:nth-child(4) {
+  &.done > .cell:nth-child(4) {
     animation-delay: 1.2s;
   }
 
-  & > .cell:nth-child(5) {
+  &.done > .cell:nth-child(5) {
     animation-delay: 1.6s;
   }
 
-  & > .cell:nth-child(6) {
+  &.done > .cell:nth-child(6) {
     animation-delay: 2s;
   }
 
-  & > .cell:nth-child(7) {
+  &.done > .cell:nth-child(7) {
     animation-delay: 2.4s;
   }
 
-  & > .cell:nth-child(8) {
+  &.done > .cell:nth-child(8) {
     animation-delay: 2.8s;
+  }
+
+  & > .cell.filled {
+    animation: 400ms ease-out ${bump};
+    animation-delay: 0;
   }
 
   & .cell.correct {
