@@ -69,17 +69,6 @@ const GlobalStyle = createGlobalStyle`
     margin-bottom: 0.5em;
   }
 
-  /*
-    Keyframe animations
-  */
-  @keyframes slideUp {
-    from {
-      transform: translateY(100%);
-    }
-    to {
-      transform: translateY(0%);
-    }
-  }
 `;
 
 const App = ({className}) => {
@@ -111,7 +100,7 @@ const StyledApp = styled(App)`
     justify-content: center;
     gap: var(--game-spacing);
     padding: var(--game-spacing) 32px;
-    margin: 0 auto;
+    margin: 0.25em auto;
     min-width: 250px;
     max-width: min(500px, 58vh, 100%);
   }

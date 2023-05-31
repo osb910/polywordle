@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {slideUp} from '../../animations/keyframes';
+import {slideDown} from '../../animations/keyframes';
 const Banner = ({className, status, children}) => {
   return <aside className={`${status} ${className}`}>{children}</aside>;
 };
@@ -8,15 +8,16 @@ const StyledBanner = styled(Banner)`
   position: fixed;
   z-index: 1;
   inset-inline: 0;
-  bottom: 0;
-  width: 100%;
-  max-width: 400px;
+  top: 0rem;
+  width: 90%;
+  max-width: fit-content;
   margin: 0 auto;
-  padding: 1em;
+  padding: 0.75em;
   text-align: center;
-  animation: 1.25s cubic-bezier(0, 0.72, 0.24, 1.02) both ${slideUp};
-  border-radius: 4px 4px 0px 0px;
+  animation: 1.25s cubic-bezier(0, 0.72, 0.24, 1.02) both ${slideDown};
+  border-radius: 0px 0px 4px 4px;
   will-change: transform;
+  filter: drop-shadow(1px 1px 10px rgba(0, 0, 0, 0.2));
 
   &.happy {
     background: var(--color-success);
@@ -34,17 +35,16 @@ const StyledBanner = styled(Banner)`
   }
 
   &:where(.happy, .sad) {
-    animation-delay: 2s;
+    animation-delay: 2.25s;
   }
 
   & button {
-    padding: 0.4em 0.8em;
-    margin-block: 0.5em 0;
+    padding: 0.2em 0.4em;
+    margin-block: 0.25em 0;
     background-color: transparent;
-    /* color: var(--color-gray-100); */
     border: 1px solid;
     border-radius: 4px;
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     transition: all 300ms ease-in-out;
   }
 

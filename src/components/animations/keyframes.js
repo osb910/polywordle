@@ -1,8 +1,8 @@
 import {keyframes} from 'styled-components';
 
-export const slideUp = keyframes`
+export const slideDown = keyframes`
   from {
-    transform: translateY(100%);
+    transform: translateY(-100%);
   }
   
   to {
