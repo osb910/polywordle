@@ -33,3 +33,40 @@ export const checkGuess = (guess, answer) => {
     }));
   return classification;
 };
+
+export const addGuess = (guesses, word, step) =>
+  [...guesses].map(guess =>
+    guess.step === step
+      ? {
+          word,
+          step,
+          id: crypto.randomUUID(),
+        }
+      : guess
+  );
+
+export const fillGuess = (guesses, input, step) =>
+  [...guesses].map(guess =>
+    guess.step === step
+      ? {
+          ...guess,
+          word: guess.word.map((_, idx) => ({
+            letter: input[idx] ?? '',
+            status: input[idx] ? 'filled' : '',
+          })),
+        }
+      : guess
+  );
+
+export const getWordleBoard = (guesses, step) => {
+  const board = [];
+  for (let i = 0; i < step; i++) {
+    const squares = guesses[i].word
+      .map(({status}) =>
+        status === 'correct' ? '🟩' : status === 'misplaced' ? '🟧' : '⬛'
+      )
+      .join('');
+    board.push(squares);
+  }
+  return board.join('\n');
+};

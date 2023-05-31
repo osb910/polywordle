@@ -36,23 +36,27 @@ const Keyboard = ({className, onClick}) => {
 
   useEffect(() => {
     if (step === 1) return;
-    const prevGuess = [...guesses[step - 2].word];
+    const timeoutId = setTimeout(() => {
+      const prevGuess = [...guesses[step - 2].word];
 
-    setLetterStatus(current => {
-      const newStatus = [...current];
-      prevGuess.forEach(item => {
-        if (
-          current.some(
-            ({letter, status}) =>
-              item.letter === letter && item.status === status
-          )
-        ) {
-          return;
-        }
-        newStatus.unshift(item);
+      setLetterStatus(current => {
+        const newStatus = [...current];
+        prevGuess.forEach(item => {
+          if (
+            current.some(
+              ({letter, status}) =>
+                item.letter === letter && item.status === status
+            )
+          ) {
+            return;
+          }
+          newStatus.unshift(item);
+        });
+        return newStatus.sort(({status}) => (status === 'correct' ? -1 : 1));
       });
-      return newStatus.sort(({status}) => (status === 'correct' ? -1 : 1));
-    });
+    }, 2000);
+
+    return () => clearInterval(timeoutId);
   }, [step]);
 
   const handleActiveKeys = useCallback(

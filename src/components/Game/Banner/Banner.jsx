@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import {slideUp} from '../../animations/keyframes';
 const Banner = ({className, status, children}) => {
   return <aside className={`${status} ${className}`}>{children}</aside>;
 };
@@ -13,8 +14,7 @@ const StyledBanner = styled(Banner)`
   margin: 0 auto;
   padding: 1em;
   text-align: center;
-  animation: slideUp 1.25s cubic-bezier(0, 0.72, 0.24, 1.02);
-  /* animation-delay: 800ms; */
+  animation: 1.25s cubic-bezier(0, 0.72, 0.24, 1.02) both ${slideUp};
   border-radius: 4px 4px 0px 0px;
   will-change: transform;
 
@@ -31,6 +31,10 @@ const StyledBanner = styled(Banner)`
   &.warning {
     background: var(--color-warning);
     color: white;
+  }
+
+  &:where(.happy, .sad) {
+    animation-delay: 2s;
   }
 
   & button {

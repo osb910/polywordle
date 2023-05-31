@@ -1,4 +1,4 @@
-import {useState, useContext, useEffect, useCallback} from 'react';
+import {useState, useContext, useEffect, useRef} from 'react';
 import AppContext from '../../lib/app-context';
 import Grid from './Grid';
 import GuessInput from './GuessInput/GuessInput';
@@ -13,10 +13,15 @@ const Game = () => {
   const {gameOver, gameWon, resetGame} = useContext(GameContext);
 
   const [error, setError] = useState(null);
+  const okRef = useRef();
   const uiText = game[lang];
 
   useEffect(() => {
     gameOver && resetGame(lang);
+  }, []);
+
+  useEffect(() => {
+    // error && okRef.current.focus(); // BUG: clicks on mount
   }, []);
 
   return (
@@ -27,7 +32,9 @@ const Game = () => {
       {error && (
         <Banner status='warning'>
           <p>{error}</p>
-          <button onClick={() => setError(null)}>{uiText.ok}</button>
+          <button type='button' ref={okRef} onClick={() => setError(null)}>
+            {uiText.ok}
+          </button>
         </Banner>
       )}
     </>

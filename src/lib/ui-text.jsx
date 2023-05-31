@@ -89,7 +89,7 @@ const game = {
     wonMessage(step) {
       return (
         <>
-          <strong>مبارك!</strong> قد حللتها بعد{' '}
+          <strong>مبارك!</strong> قد حللتها في{' '}
           <strong>
             {step === 1
               ? 'أول'

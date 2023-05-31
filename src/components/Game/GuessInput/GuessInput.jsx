@@ -1,16 +1,29 @@
 /* eslint-disable react/prop-types */
-import {useState, useEffect, useContext, useCallback, useId} from 'react';
+import {
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+  useId,
+  useRef,
+} from 'react';
 import styled from 'styled-components';
 import Keyboard from './Keyboard';
 import AppContext from '../../../lib/app-context';
 import GameContext from '../../../lib/game-context';
 import {game} from '../../../lib/ui-text';
-import {checkGuess} from '../../../lib/game-logic';
+import {
+  addGuess,
+  checkGuess,
+  fillGuess,
+  getWordleBoard,
+} from '../../../lib/game-logic';
 import WORDLES from '../../../lib/data/data';
 import shuffleSfx from '../../../assets/sfx/shuffling-cards.mp3';
 
 const GuessInput = ({className, setError}) => {
   const [guessInput, setGuessInput] = useState('');
+  const [evaluating, setEvaluating] = useState(false);
   const {lang} = useContext(AppContext);
   const {
     guesses,
@@ -26,19 +39,10 @@ const GuessInput = ({className, setError}) => {
     lettersPerWord,
   } = useContext(GameContext);
   const id = useId();
+  const sfxRef = useRef();
 
   const uiText = game[lang];
   const WORDS = WORDLES[lang][lettersPerWord];
-
-  const shuffle = () => {
-    const shuffleEl = document.querySelector('#shuffle-sfx');
-    console.log(shuffleEl);
-    shuffleEl.play();
-  };
-
-  useEffect(() => {
-    setGuessInput(guesses[step - 1].word.map(({letter}) => letter).join(''));
-  }, []);
 
   const changeGuess = useCallback(
     value => {
@@ -46,24 +50,14 @@ const GuessInput = ({className, setError}) => {
       if (lang === 'ar' && /[^\p{Script=Arabic}]/u.test(input)) return;
       if (lang === 'en' && /[^A-Za-z]/.test(input)) return;
       setGuessInput(input);
-      setGuesses(
-        [...guesses].map(guess =>
-          guess.step === step
-            ? {
-                ...guess,
-                word: guess.word.map((_, idx) => ({
-                  letter: input[idx] ?? '',
-                  status: input[idx] ? 'filled' : '',
-                })),
-              }
-            : guess
-        )
-      );
+      const newGuesses = fillGuess(guesses, input, step);
+      setGuesses(newGuesses);
     },
     [guesses, lang, setGuesses, step]
   );
 
   const submitGuess = useCallback(() => {
+    if (guessInput.length < wordle.length) return;
     if (!WORDS.includes(guessInput)) {
       setError(uiText.unknownWord);
       changeGuess('');
@@ -71,30 +65,26 @@ const GuessInput = ({className, setError}) => {
     }
 
     const word = checkGuess(guessInput, wordle);
-    setGuesses(
-      [...guesses].map(guess =>
-        guess.step === step
-          ? {
-              word,
-              step,
-              id: crypto.randomUUID(),
-            }
-          : guess
-      )
-    );
+    const newGuesses = addGuess(guesses, word, step);
+    setGuesses(newGuesses);
 
-    shuffle();
+    sfxRef.current.play();
+    setEvaluating(true);
     setGuessInput('');
+    const timeoutId = setTimeout(() => setEvaluating(false), 2000);
 
     if (guessInput === wordle) {
       setGameWon(true);
       setGameOver(true);
+      console.log(getWordleBoard(newGuesses, step));
       return;
     }
 
     setStep(step + 1);
 
     step === numOfAttempts && setGameOver(true);
+
+    return () => clearTimeout(timeoutId);
   }, [
     guessInput,
     WORDS,
@@ -122,30 +112,19 @@ const GuessInput = ({className, setError}) => {
       //     : key === 'آ'
       //     ? 'ءا'
       //     : key;
-      const pressLetter = letter => {
-        const newInput = guessInput + letter.toUpperCase();
-        if (newInput.length > lettersPerWord) return;
-        changeGuess(newInput);
-      };
+      if (evaluating) return;
       if (gameOver) {
         key === 'Enter' && resetGame(lang);
         return;
       }
 
-      // if (
-      //   /Enter|Backspace|\p{L}{1}/u.test(key) &&
-      //   document.activeElement.id === `${id}-guess-input`
-      // )
-      //   return;
       if (key === 'Enter') {
-        document.activeElement.id === `${id}-guess-input`;
         if (guessInput < lettersPerWord) return;
         submitGuess();
         return;
       }
 
       if (key === 'Backspace') {
-        if (document.activeElement.id === `${id}-guess-input`) return;
         const newInput =
           guessInput.length === 1
             ? ''
@@ -158,21 +137,26 @@ const GuessInput = ({className, setError}) => {
       }
 
       if (key.length === 1) {
-        if (document.activeElement.id === `${id}-guess-input`) return;
-        pressLetter(key);
+        const newInput = guessInput + key.toUpperCase();
+        if (newInput.length > lettersPerWord) return;
+        changeGuess(newInput);
       }
     },
     [
       gameOver,
       guessInput,
       lettersPerWord,
-      id,
       changeGuess,
       submitGuess,
       resetGame,
       lang,
+      evaluating,
     ]
   );
+
+  useEffect(() => {
+    changeGuess('');
+  }, []);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
@@ -199,11 +183,19 @@ const GuessInput = ({className, setError}) => {
         maxLength={lettersPerWord}
         pattern={`\\p{L}{${lettersPerWord}}`}
         title={`${lettersPerWord} letter word`}
-        disabled={gameOver}
+        disabled={gameOver || evaluating}
         onInput={evt => changeGuess(evt.target.value)}
+        onKeyDown={evt =>
+          /^(Enter|Backspace|[\p{L}])$/iu.test(evt.key) && evt.stopPropagation()
+        }
       />
       <Keyboard onClick={handleKeyDown} lang={lang} />
-      <audio id='shuffle-sfx' src={shuffleSfx} preload='auto'></audio>
+      <audio
+        id='shuffle-sfx'
+        ref={sfxRef}
+        src={shuffleSfx}
+        preload='auto'
+      ></audio>
     </form>
   );
 };

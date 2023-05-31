@@ -45,8 +45,8 @@ const StyledGuess = styled(Guess)`
       `'${theme.lang === 'ar' ? (+step).toLocaleString('ar-EG') : step}'`};
     position: absolute;
     z-index: -1;
-    inset-inline-start: -0.75em;
-    font-size: 2.2rem;
+    inset-inline-start: -0.8em;
+    font-size: 2rem;
     font-weight: 600;
     color: var(--color-gray-700);
     opacity: 0.8;
