@@ -1,11 +1,11 @@
-import {useContext} from 'react';
+import {memo, useContext} from 'react';
 import styled, {ThemeProvider} from 'styled-components';
 import AppContext from '../../../../lib/app-context';
 import {bump, closeGap, flipInX} from '../../../animations/keyframes';
 import GameContext from '../../../../lib/game-context';
 import {isKashidable, kashidify} from '../../../../lib/utils';
 
-const Guess = ({word, step, className, key}) => {
+const Guess = memo(({word, step, className, key}) => {
   const {lang} = useContext(AppContext);
   const {step: gameStep, gameOver} = useContext(GameContext);
   return (
@@ -23,7 +23,7 @@ const Guess = ({word, step, className, key}) => {
       ))}
     </ul>
   );
-};
+});
 
 const StyledGuess = styled(Guess)`
   padding: 0;

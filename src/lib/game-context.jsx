@@ -1,4 +1,4 @@
-import {createContext, useReducer} from 'react';
+import {createContext, useMemo, useReducer} from 'react';
 import {getInitialGuesses, getWordle} from './game-logic';
 
 const GameContext = createContext({
@@ -119,28 +119,28 @@ export const GameProvider = props => {
     changeStep(1);
   };
 
+  const value = useMemo(() => {
+    return {
+      wordle: gameState.wordle,
+      gameOver: gameState.gameOver,
+      gameWon: gameState.gameWon,
+      guesses: gameState.guesses,
+      step: gameState.step,
+      numOfAttempts: gameState.numOfAttempts,
+      lettersPerWord: gameState.lettersPerWord,
+      setWordle,
+      setGameOver,
+      setGameWon,
+      setGuesses: changeGuesses,
+      setStep: changeStep,
+      setNumOfAttempts: changeNumOfAttempts,
+      setLettersPerWord: changeLettersPerWord,
+      resetGame,
+    };
+  }, [gameState]);
+
   return (
-    <GameContext.Provider
-      value={{
-        wordle: gameState.wordle,
-        gameOver: gameState.gameOver,
-        gameWon: gameState.gameWon,
-        guesses: gameState.guesses,
-        step: gameState.step,
-        numOfAttempts: gameState.numOfAttempts,
-        lettersPerWord: gameState.lettersPerWord,
-        setWordle,
-        setGameOver,
-        setGameWon,
-        setGuesses: changeGuesses,
-        setStep: changeStep,
-        setNumOfAttempts: changeNumOfAttempts,
-        setLettersPerWord: changeLettersPerWord,
-        resetGame,
-      }}
-    >
-      {props.children}
-    </GameContext.Provider>
+    <GameContext.Provider value={value}>{props.children}</GameContext.Provider>
   );
 };
 

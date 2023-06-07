@@ -1,63 +1,42 @@
-import {useCallback, useEffect, useState} from 'react';
+import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 import styled, {css} from 'styled-components';
 import {flipInX} from '../../../animations/keyframes';
 import {useContext} from 'react';
 import AppContext from '../../../../lib/app-context';
 import GameContext from '../../../../lib/game-context';
 import {game} from '../../../../lib/ui-text';
+import KeyButton from './KeyButton/KeyButton';
 
-const Keyboard = ({className, onClick}) => {
+// TODO: Optimize key press
+
+const Keyboard = memo(({className, onClick}) => {
   const {lang} = useContext(AppContext);
   const {guesses, step, numOfAttempts, lettersPerWord, gameOver} =
     useContext(GameContext);
   const uiText = game[lang];
   const keys = uiText.keyboard;
-  const [letterStatus, setLetterStatus] = useState([]);
+  const [boardStatus, setBoardStatus] = useState({});
   const [activeKeys, setActiveKeys] = useState([]);
 
   useEffect(() => {
-    const prevStatus = [];
-    for (let i = 0; i < step - 1; i++) {
-      const guess = [...guesses[i].word];
-      guess.forEach(item => {
-        if (
-          prevStatus.some(
-            ({letter, status}) =>
-              item.letter === letter && item.status === status
-          )
-        ) {
-          return;
+    const timeoutId = setTimeout(
+      () => {
+        const alphabet = {};
+        for (let i = 0; i < step; i++) {
+          if (!guesses[i]?.word) continue;
+          const guess = [...guesses[i].word];
+          guess.forEach(item => {
+            if (alphabet[item.letter] === 'correct') return;
+            alphabet[item.letter] = item.status;
+          });
         }
-        prevStatus.unshift(item);
-      });
-    }
-    setLetterStatus(prevStatus);
-  }, [lang, numOfAttempts, lettersPerWord, gameOver]);
-
-  useEffect(() => {
-    if (step === 1) return;
-    const timeoutId = setTimeout(() => {
-      const prevGuess = [...guesses[step - 2].word];
-
-      setLetterStatus(current => {
-        const newStatus = [...current];
-        prevGuess.forEach(item => {
-          if (
-            current.some(
-              ({letter, status}) =>
-                item.letter === letter && item.status === status
-            )
-          ) {
-            return;
-          }
-          newStatus.unshift(item);
-        });
-        return newStatus.sort(({status}) => (status === 'correct' ? -1 : 1));
-      });
-    }, 2000);
+        setBoardStatus(alphabet);
+      },
+      step === 1 && !gameOver ? 0 : 2000
+    );
 
     return () => clearInterval(timeoutId);
-  }, [step]);
+  }, [lang, step, gameOver, numOfAttempts, lettersPerWord]);
 
   const handleActiveKeys = useCallback(
     evt => {
@@ -104,45 +83,20 @@ const Keyboard = ({className, onClick}) => {
       {keys.map((row, idx) => (
         <div key={idx} className='row'>
           {row.map(key => (
-            <button
-              className={`${
-                letterStatus.find(({letter}) => letter === key)?.status ?? ''
-              } ${activeKeys.includes(getKeyName(key)) ? 'active' : ''}`}
-              style={
-                /[⮐⮑⌫⌦]/.test(key)
-                  ? {
-                      width:
-                        lang === 'ar'
-                          ? '4.5rem'
-                          : key === '⮐'
-                          ? '6.5rem'
-                          : 'initial',
-                      fontSize: '1.5rem',
-                      fontFamily: 'monospace',
-                      backgroundColor: /[⮐⮑]/.test(key)
-                        ? 'rgb(0, 123, 255)'
-                        : '#f55',
-                    }
-                  : {}
-              }
-              data-letter={getKeyName(key)}
-              type='button'
+            <KeyButton
               key={key}
-              onClick={evt =>
-                onClick({
-                  ...evt,
-                  key: getKeyName(key),
-                })
-              }
-            >
-              <kbd>{key.toUpperCase()}</kbd>
-            </button>
+              btn={key}
+              status={boardStatus[key]}
+              active={activeKeys.includes(getKeyName(key))}
+              keyName={getKeyName(key)}
+              handleClick={onClick}
+            />
           ))}
         </div>
       ))}
     </section>
   );
-};
+});
 
 const StyledKeyboard = styled(Keyboard)`
   display: flex;

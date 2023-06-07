@@ -17,7 +17,7 @@ const StyledBanner = styled(Banner)`
   animation: 1.25s cubic-bezier(0, 0.72, 0.24, 1.02) both ${slideDown};
   border-radius: 0px 0px 4px 4px;
   will-change: transform;
-  filter: drop-shadow(1px 1px 10px rgba(0, 0, 0, 0.2));
+  filter: drop-shadow(1px 1px 10px rgba(0, 0, 0, 0.15));
 
   &.happy {
     background: var(--color-success);
