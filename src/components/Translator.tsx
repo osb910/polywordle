@@ -1,5 +1,5 @@
 import {useState, useEffect, MouseEvent} from 'react';
-import globe from '../assets/images/globe.svg';
+import {Globe} from 'react-feather';
 import styled from 'styled-components';
 import {bump} from './animations/keyframes';
 
@@ -29,7 +29,7 @@ const Translator = ({
       aria-label='Language'
       className={`${className} ${translatorHighlighted ? 'bump' : ''}`}
     >
-      <img src={globe} alt='Language' />
+      <Globe />
       {langDisplay && <div className='current-lang'>{langDisplay}</div>}
       <ul>
         <li data-lang='en' onClick={changeLang}>

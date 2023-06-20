@@ -1,6 +1,6 @@
-import {FC, ReactNode} from 'react';
+import {ReactNode} from 'react';
 
-const hiddenStyles = {
+const hiddenStyles: {[key: string]: any} = {
   display: 'inline-block',
   position: 'absolute',
   overflow: 'hidden',
@@ -12,7 +12,7 @@ const hiddenStyles = {
   border: 0,
 };
 
-const VisuallyHidden: FC<{children: ReactNode}> = ({children}) => (
+const VisuallyHidden = ({children}: {children: ReactNode}) => (
   <span style={hiddenStyles}>{children}</span>
 );
 

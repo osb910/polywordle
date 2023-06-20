@@ -4,7 +4,6 @@ import {
   useContext,
   useCallback,
   useId,
-  useRef,
   KeyboardEvent,
   ChangeEvent,
   Dispatch,
@@ -22,7 +21,7 @@ import {
   getWordleBoard,
 } from '../../../lib/game-logic';
 import WORDLES from '../../../lib/data/data';
-import shuffleSfx from '../../../assets/sfx/shuffling-cards.mp3';
+// import shuffleSfx from '../../../assets/sfx/shuffling-cards.mp3';
 import {ClickEvent} from './Keyboard/KeyButton';
 
 interface GuessInputProps {
@@ -48,7 +47,7 @@ const GuessInput = ({className, setError}: GuessInputProps) => {
     lettersPerWord,
   } = useContext(GameContext);
   const id = useId();
-  const sfxRef = useRef<HTMLAudioElement | null>(null);
+  // const sfxRef = useRef<HTMLAudioElement | null>(null);
 
   const l10n = gameL10n[lang];
   const WORDS = WORDLES[lang][lettersPerWord];
@@ -77,7 +76,7 @@ const GuessInput = ({className, setError}: GuessInputProps) => {
     const newGuesses = addGuess(guesses, word, step);
     setGuesses(newGuesses);
 
-    sfxRef.current!.play();
+    // sfxRef.current!.play();
     setEvaluating(true);
     setGuessInput('');
     const timeoutId = setTimeout(() => setEvaluating(false), 2000);
@@ -208,12 +207,12 @@ const GuessInput = ({className, setError}: GuessInputProps) => {
         }
       />
       <Keyboard onClick={handleKeyDown} lang={lang} />
-      <audio
+      {/* <audio
         id='shuffle-sfx'
         ref={sfxRef}
         src={shuffleSfx}
         preload='auto'
-      ></audio>
+      ></audio> */}
     </form>
   );
 };
