@@ -1,4 +1,3 @@
-import {FC} from 'react';
 import {useContext} from 'react';
 import styled from 'styled-components';
 import Guess from './Guess';
@@ -8,12 +7,12 @@ interface GridProps {
   className?: string;
 }
 
-const Grid: FC<GridProps> = ({className}) => {
+const Grid = ({className}: GridProps) => {
   const {guesses} = useContext(GameContext);
   return (
     <ol className={className}>
       {guesses.map(({word, id}, idx) => (
-        <Guess word={word} key={id} guessKey={id} step={idx + 1} />
+        <Guess word={word} key={id} step={idx + 1} />
       ))}
     </ol>
   );

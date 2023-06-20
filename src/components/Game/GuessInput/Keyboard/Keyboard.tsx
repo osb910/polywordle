@@ -1,24 +1,28 @@
-import {memo, useCallback, useEffect, useState, FC, KeyboardEvent} from 'react';
+import {memo, useCallback, useEffect, useState, KeyboardEvent} from 'react';
 import styled, {css} from 'styled-components';
 import {flipInX} from '../../../animations/keyframes';
 import {useContext} from 'react';
-import AppContext from '../../../../context/app-context';
 import GameContext from '../../../../context/game-context';
 import gameL10n from '../../../../l10n/game-l10n';
 import KeyButton from './KeyButton/KeyButton';
+import {ClickEvent} from './KeyButton/KeyButton';
 
 interface KeyboardProps {
   className?: string;
-  onClick: (key: string) => void;
+  onClick: (evt: ClickEvent) => void;
+  lang: string;
 }
 
-const Keyboard: FC<KeyboardProps> = memo(({className, onClick}) => {
-  const {lang} = useContext(AppContext);
+type BoardStatus = {
+  [key: string]: string;
+};
+
+const Keyboard = memo(({className, onClick, lang}: KeyboardProps) => {
   const {guesses, step, numOfAttempts, lettersPerWord, gameOver} =
     useContext(GameContext);
   const {keyboard} = gameL10n[lang];
-  const [boardStatus, setBoardStatus] = useState({});
-  const [activeKeys, setActiveKeys] = useState([]);
+  const [boardStatus, setBoardStatus] = useState<BoardStatus>({});
+  const [activeKeys, setActiveKeys] = useState<string[]>([]);
 
   useEffect(() => {
     const timeoutId = setTimeout(
@@ -41,7 +45,7 @@ const Keyboard: FC<KeyboardProps> = memo(({className, onClick}) => {
   }, [lang, step, gameOver, numOfAttempts, lettersPerWord]);
 
   const handleActiveKeys = useCallback(
-    (evt: KeyboardEvent): void => {
+    (evt: KeyboardEvent) => {
       let {key} = evt;
       key = key === 'Enter' || key === '⌫' ? key : key.toUpperCase();
       if (activeKeys.includes(key)) return;
@@ -51,12 +55,19 @@ const Keyboard: FC<KeyboardProps> = memo(({className, onClick}) => {
   );
 
   useEffect(() => {
-    window.addEventListener('keypress', handleActiveKeys);
-    return () => window.removeEventListener('keypress', handleActiveKeys);
+    window.addEventListener(
+      'keypress',
+      handleActiveKeys as unknown as (evt: Event) => void
+    );
+    return () =>
+      window.removeEventListener(
+        'keypress',
+        handleActiveKeys as unknown as (evt: Event) => void
+      );
   }, [handleActiveKeys]);
 
   const handleKeyUp = useCallback(
-    (evt: KeyboardEvent): void => {
+    (evt: KeyboardEvent) => {
       let {key} = evt;
       key = key === 'Enter' || key === '⌫' ? key : key.toUpperCase();
       if (!activeKeys.includes(key)) return;
@@ -69,8 +80,15 @@ const Keyboard: FC<KeyboardProps> = memo(({className, onClick}) => {
   );
 
   useEffect(() => {
-    window.addEventListener('keyup', handleKeyUp);
-    return () => window.removeEventListener('keyup', handleKeyUp);
+    window.addEventListener(
+      'keyup',
+      handleKeyUp as unknown as (evt: Event) => void
+    );
+    return () =>
+      window.removeEventListener(
+        'keyup',
+        handleKeyUp as unknown as (evt: Event) => void
+      );
   }, [handleKeyUp]);
 
   const getKeyName = (key: string): string =>
@@ -82,7 +100,7 @@ const Keyboard: FC<KeyboardProps> = memo(({className, onClick}) => {
 
   return (
     <section className={className}>
-      {keyboard.map((row, idx) => (
+      {keyboard.map((row: string[], idx: number) => (
         <div key={idx} className='row'>
           {row.map(key => (
             <KeyButton

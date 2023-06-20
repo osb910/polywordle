@@ -14,11 +14,9 @@ interface GuessProps {
   className?: string;
   word: Letter[];
   step: number;
-  id: string;
-  guessKey: string;
 }
 
-const Guess: FC<GuessProps> = memo(({word, step, className, guessKey}) => {
+const Guess = memo(({word, step, className}: GuessProps) => {
   const {lang} = useContext(AppContext);
   const {step: gameStep, gameOver} = useContext(GameContext);
   return (
@@ -29,7 +27,7 @@ const Guess: FC<GuessProps> = memo(({word, step, className, guessKey}) => {
       lang={lang}
     >
       {word.map(({letter, status}, idx, arr) => (
-        <li className={`cell ${status}`} key={`${guessKey}-${idx}`}>
+        <li className={`cell ${status}`} key={`${step}-${idx}`}>
           {isKashidable(arr[idx - 1]?.letter) ? '\u0640' : ''}
           {idx === arr.length - 1 ? letter : kashidify(letter)}
         </li>

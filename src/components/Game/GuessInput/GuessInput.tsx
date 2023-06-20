@@ -5,9 +5,10 @@ import {
   useCallback,
   useId,
   useRef,
-  FC,
   KeyboardEvent,
   ChangeEvent,
+  Dispatch,
+  SetStateAction,
 } from 'react';
 import styled from 'styled-components';
 import Keyboard from './Keyboard';
@@ -22,15 +23,16 @@ import {
 } from '../../../lib/game-logic';
 import WORDLES from '../../../lib/data/data';
 import shuffleSfx from '../../../assets/sfx/shuffling-cards.mp3';
+import {ClickEvent} from './Keyboard/KeyButton';
 
 interface GuessInputProps {
+  setError: Dispatch<SetStateAction<string | null>>;
   className?: string;
-  setError: (error: string) => void;
 }
 
-const GuessInput: FC<GuessInputProps> = ({className, setError}) => {
-  const [guessInput, setGuessInput] = useState('');
-  const [evaluating, setEvaluating] = useState(false);
+const GuessInput = ({className, setError}: GuessInputProps) => {
+  const [guessInput, setGuessInput] = useState<string>('');
+  const [evaluating, setEvaluating] = useState<boolean>(false);
   const {lang} = useContext(AppContext);
   const {
     guesses,
@@ -46,7 +48,7 @@ const GuessInput: FC<GuessInputProps> = ({className, setError}) => {
     lettersPerWord,
   } = useContext(GameContext);
   const id = useId();
-  const sfxRef = useRef(null);
+  const sfxRef = useRef<HTMLAudioElement | null>(null);
 
   const l10n = gameL10n[lang];
   const WORDS = WORDLES[lang][lettersPerWord];
@@ -63,7 +65,7 @@ const GuessInput: FC<GuessInputProps> = ({className, setError}) => {
     [guesses, lang, setGuesses, step]
   );
 
-  const submitGuess = useCallback((): void => {
+  const submitGuess = useCallback((): Function | undefined => {
     if (guessInput.length < wordle.length) return;
     if (!WORDS.includes(guessInput)) {
       setError(l10n.unknownWord);
@@ -75,7 +77,7 @@ const GuessInput: FC<GuessInputProps> = ({className, setError}) => {
     const newGuesses = addGuess(guesses, word, step);
     setGuesses(newGuesses);
 
-    sfxRef.current.play();
+    sfxRef.current!.play();
     setEvaluating(true);
     setGuessInput('');
     const timeoutId = setTimeout(() => setEvaluating(false), 2000);
@@ -109,8 +111,8 @@ const GuessInput: FC<GuessInputProps> = ({className, setError}) => {
   ]);
 
   const handleKeyDown = useCallback(
-    (evt: KeyboardEvent): void => {
-      let {key, which, shiftKey} = evt;
+    (evt: ClickEvent): void => {
+      let {key} = evt;
       // key =
       //   key === 'Unidentified' && which === 66
       //     ? shiftKey
@@ -126,7 +128,7 @@ const GuessInput: FC<GuessInputProps> = ({className, setError}) => {
       }
 
       if (key === 'Enter') {
-        if (guessInput < lettersPerWord) return;
+        if (guessInput.length < lettersPerWord) return;
         submitGuess();
         return;
       }
@@ -166,8 +168,15 @@ const GuessInput: FC<GuessInputProps> = ({className, setError}) => {
   }, []);
 
   useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener(
+      'keydown',
+      handleKeyDown as unknown as (evt: Event) => void
+    );
+    return () =>
+      window.removeEventListener(
+        'keydown',
+        handleKeyDown as unknown as (evt: Event) => void
+      );
   }, [handleKeyDown]);
 
   return (

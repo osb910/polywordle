@@ -50,13 +50,13 @@ export const checkGuess = (guess: string, answer: string): Letter[] | null => {
 
 export const addGuess = (
   guesses: Guess[],
-  word: Letter[],
+  word: Letter[] | null,
   step: number
 ): Guess[] =>
   [...guesses].map(guess =>
     guess.step === step
       ? {
-          word,
+          word: word || [],
           step,
           id: crypto.randomUUID(),
         }

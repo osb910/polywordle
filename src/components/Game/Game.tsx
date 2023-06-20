@@ -12,7 +12,7 @@ const Game = () => {
   const {lang} = useContext(AppContext);
   const {gameOver, gameWon, resetGame} = useContext(GameContext);
 
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<null | string>(null);
   const okRef = useRef(null);
   const l10n = gameL10n[lang];
 

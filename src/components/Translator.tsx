@@ -1,22 +1,23 @@
-import {useState, useEffect, FC, MouseEvent} from 'react';
+import {useState, useEffect, MouseEvent} from 'react';
 import globe from '../assets/images/globe.svg';
 import styled from 'styled-components';
 import {bump} from './animations/keyframes';
 
-interface TranslatorProps {
+type TranslatorProps = {
   lang: string;
   changeLang: (evt: MouseEvent<HTMLLIElement>) => void;
   langDisplay?: string;
   className?: string;
-}
+};
 
-const Translator: FC<TranslatorProps> = ({
+const Translator = ({
   lang,
   changeLang,
   langDisplay,
   className,
-}) => {
-  const [translatorHighlighted, setTranslatorHighlighted] = useState(false);
+}: TranslatorProps) => {
+  const [translatorHighlighted, setTranslatorHighlighted] =
+    useState<boolean>(false);
   useEffect(() => {
     setTranslatorHighlighted(true);
     let timer = setTimeout(() => setTranslatorHighlighted(false), 700);
@@ -48,14 +49,15 @@ const StyledTranslator = styled(Translator)`
   --hex-color: #1d3557;
   --sept-color: #e1eaee;
 
-  height: fit-content;
+  block-size: fit-content;
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 0.4em;
-  margin: 0 0.8em;
+  margin-block: 0;
+  margin-inline: 0.8em;
   border-radius: 1rem;
   background-color: var(--sept-color);
   cursor: pointer;
@@ -114,9 +116,10 @@ const StyledTranslator = styled(Translator)`
   }
 
   & ul li {
-    width: 100%;
+    inline-size: 100%;
     text-align: center;
-    padding: 0.3em 0.5em;
+    padding-block: 0.5em;
+    padding-inline: 0.5em;
     background-color: #fff;
   }
 

@@ -1,4 +1,4 @@
-import {FC, ReactNode} from 'react';
+import {ReactNode} from 'react';
 import styled from 'styled-components';
 import {slideDown} from '../../animations/keyframes';
 
@@ -8,7 +8,7 @@ interface BannerProps {
   children: ReactNode;
 }
 
-const Banner: FC<BannerProps> = ({className, status, children}) => {
+const Banner = ({className, status, children}: BannerProps) => {
   return <aside className={`${status} ${className}`}>{children}</aside>;
 };
 

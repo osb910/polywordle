@@ -1,12 +1,15 @@
 import AppContext from '../../../../../context/app-context';
-import {memo, useContext, FC, MouseEvent} from 'react';
+import {memo, useContext, FC, MouseEvent, KeyboardEvent} from 'react';
 
+export type ClickEvent = {
+  [key: string]: string | MouseEvent | KeyboardEvent | boolean | any;
+};
 interface KeyButtonProps {
   btn: string;
   status?: string;
   active: boolean;
   keyName: string;
-  handleClick: (evt: MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  handleClick: (evt: ClickEvent) => void;
 }
 const KeyButton: FC<KeyButtonProps> = memo(
   ({btn, status, active, keyName, handleClick}) => {
@@ -27,12 +30,7 @@ const KeyButton: FC<KeyButtonProps> = memo(
         }
         data-letter={keyName}
         type='button'
-        onClick={evt =>
-          handleClick({
-            ...evt,
-            key: keyName,
-          })
-        }
+        onClick={(evt: MouseEvent) => handleClick({...evt, key: keyName})}
       >
         <kbd>{btn.toUpperCase()}</kbd>
       </button>
