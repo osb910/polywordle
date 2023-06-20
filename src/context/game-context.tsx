@@ -1,4 +1,5 @@
-import {createContext, useMemo, useReducer, ReactNode} from 'react';
+import {createContext, useMemo, ReactNode} from 'react';
+import {useImmerReducer} from 'use-immer';
 import {getInitialGuesses, getWordle} from '../lib/game-logic';
 
 type Letter = {
@@ -64,10 +65,11 @@ const GameContext = createContext<GameContextProps>({
 
 const storedGameState = localStorage.getItem('gameState');
 
-let defaultState: GameState = storedGameState
+let initialState: GameState = storedGameState
   ? JSON.parse(storedGameState)
   : {
       wordle: getWordle('en', 5),
+      guesses: getInitialGuesses(6, 5),
       gameOver: false,
       gameWon: false,
       step: 1,
@@ -75,81 +77,57 @@ let defaultState: GameState = storedGameState
       lettersPerWord: 5,
     };
 
-const storedGuessState = localStorage.getItem('guesses');
-
-const guessesState = storedGuessState
-  ? JSON.parse(storedGuessState)
-  : getInitialGuesses(6, 5);
-
-defaultState = {...defaultState, guesses: guessesState};
-
 interface Action {
   type: string;
   [key: string]: any;
 }
 
-const appReducer = (state: GameState, action: Action): GameState => {
-  if (action.type === 'SET_WORDLE') {
-    return {...state, wordle: action.wordle};
-  }
+const reducer = (draft: GameState, action: Action): void => {
+  const ACTIONS: {[key: string]: Function} = {
+    'set-wordle': () => (draft.wordle = action.wordle),
+    'set-game-over': () => (draft.gameOver = action.gameOver),
+    'set-game-won': () => (draft.gameWon = action.gameWon),
+    'set-guesses': () => (draft.guesses = action.guesses),
+    'change-step': () => (draft.step = action.step),
+    'change-num-of-attempts': () =>
+      (draft.numOfAttempts = action.numOfAttempts),
+    'change-letters-per-word': () =>
+      (draft.lettersPerWord = action.lettersPerWord),
+  };
 
-  if (action.type === 'SET_GAME_OVER') {
-    return {...state, gameOver: action.gameOver};
-  }
-
-  if (action.type === 'SET_GAME_WON') {
-    return {...state, gameWon: action.gameWon};
-  }
-
-  if (action.type === 'SET_GUESSES') {
-    return {...state, guesses: action.guesses};
-  }
-
-  if (action.type === 'CHANGE_STEP') {
-    return {...state, step: action.step};
-  }
-
-  if (action.type === 'CHANGE_NUM_OF_ATTEMPTS') {
-    return {...state, numOfAttempts: action.numOfAttempts};
-  }
-
-  if (action.type === 'CHANGE_LETTERS_PER_WORD') {
-    return {...state, lettersPerWord: action.lettersPerWord};
-  }
-
-  return defaultState;
+  ACTIONS[action.type]?.() ?? draft;
 };
 
 export const GameProvider = ({children}: GameProviderProps): JSX.Element => {
-  const [gameState, dispatchApp] = useReducer(appReducer, defaultState);
+  const [gameState, dispatch] = useImmerReducer(reducer, initialState);
 
   const setWordle = (wordle: string): void => {
-    dispatchApp({type: 'SET_WORDLE', wordle});
+    dispatch({type: 'set-wordle', wordle});
     localStorage.setItem('gameState', JSON.stringify({...gameState, wordle}));
   };
 
   const setGameOver = (gameOver: boolean): void => {
-    dispatchApp({type: 'SET_GAME_OVER', gameOver});
+    dispatch({type: 'set-game-over', gameOver});
     localStorage.setItem('gameState', JSON.stringify({...gameState, gameOver}));
   };
 
   const setGameWon = (gameWon: boolean): void => {
-    dispatchApp({type: 'SET_GAME_WON', gameWon});
+    dispatch({type: 'set-game-won', gameWon});
     localStorage.setItem('gameState', JSON.stringify({...gameState, gameWon}));
   };
 
-  const changeGuesses = (guesses: any): void => {
-    dispatchApp({type: 'SET_GUESSES', guesses});
-    localStorage.setItem('guesses', JSON.stringify(guesses));
+  const changeGuesses = (guesses: Guess[]): void => {
+    dispatch({type: 'set-guesses', guesses});
+    localStorage.setItem('gameState', JSON.stringify({...gameState, guesses}));
   };
 
   const changeStep = (step: number): void => {
-    dispatchApp({type: 'CHANGE_STEP', step});
+    dispatch({type: 'change-step', step});
     localStorage.setItem('gameState', JSON.stringify({...gameState, step}));
   };
 
   const changeNumOfAttempts = (numOfAttempts: number): void => {
-    dispatchApp({type: 'CHANGE_NUM_OF_ATTEMPTS', numOfAttempts});
+    dispatch({type: 'change-num-of-attempts', numOfAttempts});
     localStorage.setItem(
       'gameState',
       JSON.stringify({...gameState, numOfAttempts})
@@ -157,7 +135,7 @@ export const GameProvider = ({children}: GameProviderProps): JSX.Element => {
   };
 
   const changeLettersPerWord = (lettersPerWord: number): void => {
-    dispatchApp({type: 'CHANGE_LETTERS_PER_WORD', lettersPerWord});
+    dispatch({type: 'change-letters-per-word', lettersPerWord});
     localStorage.setItem(
       'gameState',
       JSON.stringify({...gameState, lettersPerWord})

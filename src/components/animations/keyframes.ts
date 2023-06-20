@@ -1,5 +1,44 @@
 import {keyframes} from 'styled-components';
 
+export const appear = keyframes`
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+
+  90% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+`;
+
+export const disappear = keyframes`
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+
+  80% {
+    opacity: 0.9;
+    transform: scale(0.8);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+`;
+
 export const slideDown = keyframes`
   from {
     transform: translateY(-100%);

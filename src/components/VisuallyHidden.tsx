@@ -1,6 +1,6 @@
 import {ReactNode} from 'react';
 
-const hiddenStyles: {[key: string]: any} = {
+const hiddenStyles: {[key: string]: string | number} = {
   display: 'inline-block',
   position: 'absolute',
   overflow: 'hidden',

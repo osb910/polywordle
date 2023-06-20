@@ -73,6 +73,7 @@ const GlobalStyles = createGlobalStyle`
 
   .rtl {
     direction: rtl;
+    font-family: 'Lotus';
   }
 
   .ltr {

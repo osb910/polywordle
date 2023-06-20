@@ -1,32 +1,58 @@
-import {FC, useContext, MouseEvent} from 'react';
+import {useContext, useState} from 'react';
 import styled from 'styled-components';
+import {Settings} from 'react-feather';
 import AppContext from '../../context/app-context';
-import GameContext from '../../context/game-context';
-import headerL10n from '../../l10n/header-l10n';
+import Portal from '../Portal';
+import Modal from '../Modal';
 import Translator from '../Translator';
+import IconButton from '../IconButton';
+import SettingsPage from '../SettingsPage/SettingsPage';
+import headerL10n from '../../l10n/header-l10n';
 
-const Header: FC<{className?: string}> = ({className}) => {
-  const {lang, setLang} = useContext(AppContext);
-  const {resetGame} = useContext(GameContext);
+const Header = ({className}: {className?: string}) => {
+  const {lang} = useContext(AppContext);
+  const [showSettings, setShowSettings] = useState<boolean>(false);
   const l10n = headerL10n[lang];
 
-  const handleTranslation = (evt: MouseEvent) => {
-    const newLang = (evt.target as HTMLElement).dataset.lang;
-    if (!newLang || lang === newLang) return;
-    const confirmReset = confirm(l10n.resetPrompt);
-    if (confirmReset) {
-      resetGame(newLang);
-      setLang(newLang);
-    }
-  };
+  const openSettings = () => setShowSettings(true);
+  const closeSettings = () => setShowSettings(false);
 
   return (
     <header className={className}>
       <h1>{l10n.logo}</h1>
       <section className='settings app'>
-        <Translator lang={lang} changeLang={handleTranslation} />
+        <Translator
+          langs={[
+            {
+              name: 'English',
+              code: 'en',
+            },
+            {
+              name: 'العربية',
+              code: 'ar',
+            },
+          ]}
+        />
       </section>
-      {/* <section className='settings game'>Game Settings</section> */}
+      <section className='settings game'>
+        <IconButton
+          clickHandler={openSettings}
+          icon={<Settings />}
+          highlightDeps={[showSettings]}
+        />
+      </section>
+      {showSettings && (
+        <Portal>
+          <Modal
+            title={l10n.settings}
+            dismiss={closeSettings}
+            dismissText={l10n.dismissSettings}
+            lang={lang}
+          >
+            <SettingsPage dismiss={closeSettings} />
+          </Modal>
+        </Portal>
+      )}
     </header>
   );
 };
@@ -65,6 +91,13 @@ const StyledHeader = styled(Header)`
 
   & .settings.game {
     grid-area: game-settings;
+  }
+
+  & .settings-modal {
+    width: 100%;
+    min-width: 500px;
+    max-block-size: 80vh;
+    background-color: navy;
   }
 
   @media (max-width: 25rem) {

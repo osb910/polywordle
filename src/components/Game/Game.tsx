@@ -10,7 +10,8 @@ import GameContext from '../../context/game-context';
 
 const Game = () => {
   const {lang} = useContext(AppContext);
-  const {gameOver, gameWon, resetGame} = useContext(GameContext);
+  const {gameOver, gameWon, resetGame, numOfAttempts, lettersPerWord} =
+    useContext(GameContext);
 
   const [error, setError] = useState<null | string>(null);
   const okRef = useRef(null);
@@ -18,7 +19,8 @@ const Game = () => {
 
   useEffect(() => {
     gameOver && resetGame(lang);
-  }, []);
+    resetGame(lang);
+  }, [lang, numOfAttempts, lettersPerWord]);
 
   useEffect(() => {
     // error && okRef.current.focus(); // BUG: clicks on mount

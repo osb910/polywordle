@@ -23,3 +23,34 @@
   src: local('adwa-assalaf'),
     url('./assets/fonts/adwa-assalaf.ttf') format('truetype');
 }
+
+@font-face {
+  font-family: 'Atkinson';
+  src: local('Atkinson Hyperlegible'),
+    url('./assets/fonts/Atkinson-Hyperlegible-Regular-102.otf')
+      format('opentype');
+}
+
+@font-face {
+  font-family: 'Atkinson';
+  font-weight: 700;
+  src: local('Atkinson Hyperlegible'),
+    url('./assets/fonts/Atkinson-Hyperlegible-Bold-102.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Atkinson';
+  font-style: italic;
+  src: local('Atkinson Hyperlegible'),
+    url('./assets/fonts/Atkinson-Hyperlegible-Italic-102.otf')
+      format('opentype');
+}
+
+@font-face {
+  font-family: 'Atkinson';
+  font-weight: 700;
+  font-style: italic;
+  src: local('Atkinson Hyperlegible'),
+    url('./assets/fonts/Atkinson-Hyperlegible-BoldItalic-102.otf')
+      format('opentype');
+}

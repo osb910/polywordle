@@ -31,6 +31,8 @@ const gameL10n: {[key: string]: LangText} = {
       );
     },
     unknownWord: 'Not in the word list',
+    numOfAttempts: 'Number of attempts',
+    lettersPerWord: 'Letters per word',
   },
   ar: {
     inputLabel: 'اكتب تخمينك:',
@@ -81,6 +83,8 @@ const gameL10n: {[key: string]: LangText} = {
       );
     },
     unknownWord: 'ليست عندنا',
+    numOfAttempts: 'عدد المحاولات',
+    lettersPerWord: 'عدد أحرف الكلمة',
   },
 };
 

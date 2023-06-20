@@ -123,7 +123,7 @@ const StyledKeyboard = styled(Keyboard)`
   flex-direction: column;
   gap: 6px;
   font-size: 1.25rem;
-  font-family: monospace;
+  font-family: 'Atkinson', monospace;
   ${({lang}) =>
     lang === 'ar'
       ? css`

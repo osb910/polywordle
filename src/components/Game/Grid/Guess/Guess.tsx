@@ -1,4 +1,4 @@
-import {memo, useContext, FC} from 'react';
+import {memo, useContext} from 'react';
 import styled, {ThemeProvider} from 'styled-components';
 import AppContext from '../../../../context/app-context';
 import {bump, closeGap, flipInX} from '../../../animations/keyframes';
@@ -28,7 +28,7 @@ const Guess = memo(({word, step, className}: GuessProps) => {
     >
       {word.map(({letter, status}, idx, arr) => (
         <li className={`cell ${status}`} key={`${step}-${idx}`}>
-          {isKashidable(arr[idx - 1]?.letter) ? '\u0640' : ''}
+          {isKashidable(arr[idx - 1]?.letter) && letter ? '\u0640' : ''}
           {idx === arr.length - 1 ? letter : kashidify(letter)}
         </li>
       ))}
@@ -47,8 +47,8 @@ const StyledGuess = styled(Guess)`
   flex: 0;
 
   &.done {
-    animation: 500ms ease-in both ${closeGap};
-    animation-delay: 1.75s;
+    animation: 600ms ease-in both ${closeGap};
+    animation-delay: ${({theme}) => (theme.lettersPerWord - 1) * 410}ms;
   }
 
   &::before {
@@ -56,9 +56,9 @@ const StyledGuess = styled(Guess)`
       `'${theme.lang === 'ar' ? (+step).toLocaleString('ar-EG') : step}'`};
     position: absolute;
     z-index: -1;
-    inset-inline-start: -0.8em;
+    inset-inline-start: -0.9em;
     font-size: 2rem;
-    font-weight: 600;
+    font-weight: 400;
     color: var(--color-gray-700);
     opacity: 0.8;
     animation: 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) both ${flipInX};
@@ -107,7 +107,7 @@ const StyledGuess = styled(Guess)`
   }
 
   & > .cell.filled {
-    animation: 400ms ease-out ${bump};
+    animation: 350ms ease-out ${bump};
     animation-delay: 0;
   }
 
@@ -148,7 +148,7 @@ interface GuessWithContextProps {
   step: number;
 }
 
-const GuessWithContext: FC<GuessWithContextProps> = ({word, step}) => {
+const GuessWithContext = ({word, step}: GuessWithContextProps) => {
   const {lang} = useContext(AppContext);
   const {lettersPerWord} = useContext(GameContext);
 

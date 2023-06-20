@@ -203,6 +203,8 @@ const frenchWordles = {
     'WIMAX',
     'WURMS',
   ],
+  6: ['ABOIES', 'ABOYEE', 'ABOYES', 'ABRUTI', 'ABRUZZ', 'ABSENT', 'ABUSIF'],
+  7: ['ABOIENT', 'ABOIERA', 'ABOULAI', 'ABOULAS', 'ABOULAT'],
 };
 
 export default frenchWordles;

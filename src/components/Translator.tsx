@@ -1,45 +1,50 @@
-import {useState, useEffect, MouseEvent} from 'react';
+import {useContext, MouseEvent} from 'react';
 import {Globe} from 'react-feather';
 import styled from 'styled-components';
-import {bump} from './animations/keyframes';
+import AppContext from '../context/app-context';
+import IconButton from './IconButton';
+import headerL10n from '../l10n/header-l10n';
 
-type TranslatorProps = {
-  lang: string;
-  changeLang: (evt: MouseEvent<HTMLLIElement>) => void;
+export type TranslatorProps = {
+  langs: {
+    name: string;
+    code: string;
+  }[];
   langDisplay?: string;
   className?: string;
 };
 
-const Translator = ({
-  lang,
-  changeLang,
-  langDisplay,
-  className,
-}: TranslatorProps) => {
-  const [translatorHighlighted, setTranslatorHighlighted] =
-    useState<boolean>(false);
-  useEffect(() => {
-    setTranslatorHighlighted(true);
-    let timer = setTimeout(() => setTranslatorHighlighted(false), 700);
-    return () => clearTimeout(timer);
-  }, [lang]);
+const Translator = ({langs, langDisplay, className}: TranslatorProps) => {
+  const {lang, setLang} = useContext(AppContext);
+  const l10n = headerL10n[lang];
+
+  const changeLang = (evt: MouseEvent<HTMLLIElement>): void => {
+    const newLang = (evt.target as HTMLLIElement).dataset.lang;
+    if (!newLang || lang === newLang) return;
+    const confirmReset = confirm(l10n.resetPrompt);
+    confirmReset && setLang(newLang);
+  };
 
   return (
-    <div
-      aria-label='Language'
-      className={`${className} ${translatorHighlighted ? 'bump' : ''}`}
+    <IconButton
+      icon={<Globe />}
+      className={`${className}`}
+      highlightDeps={[lang]}
     >
-      <Globe />
       {langDisplay && <div className='current-lang'>{langDisplay}</div>}
       <ul>
-        <li data-lang='en' onClick={changeLang}>
-          English
-        </li>
-        <li data-lang='ar' onClick={changeLang}>
-          العربية
-        </li>
+        {langs.map(({name, code}) => (
+          <li
+            className={code === lang ? 'selected' : ''}
+            data-lang={code}
+            key={code}
+            onClick={changeLang}
+          >
+            {name}
+          </li>
+        ))}
       </ul>
-    </div>
+    </IconButton>
   );
 };
 
@@ -47,35 +52,13 @@ const StyledTranslator = styled(Translator)`
   --sec-color: #a8dadc;
   --ter-color: #457b9d;
   --hex-color: #1d3557;
-  --sept-color: #e1eaee;
-
-  block-size: fit-content;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 0.4em;
-  margin-block: 0;
-  margin-inline: 0.8em;
-  border-radius: 1rem;
-  background-color: var(--sept-color);
-  cursor: pointer;
-  font-family: 'Calibri';
-  color: var(--hex-color);
+  --sept-color: #d1dadd75;
+  --border-radius: 6px;
 
   .rtl & .current-lang {
     font-family: Lotus;
     font-weight: 700;
-    font-size: 1.3rem;
-  }
-
-  & img {
-    width: 1.5rem;
-    margin: 0;
-    stroke: var(--hex-color);
-    color: var(--hex-color);
-    border-radius: 50%;
+    font-size: 1.25rem;
   }
 
   & .current-lang {
@@ -86,19 +69,20 @@ const StyledTranslator = styled(Translator)`
 
   & ul {
     position: absolute;
+    inset-block-start: 2rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     list-style-type: none;
     padding: 0;
-    border-radius: 6px;
-    cursor: pointer;
     border: 2px solid var(--sec-color);
-    box-shadow: 1px 2px 25px rgba(0, 0, 0, 0.2);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    box-shadow: 1px 2px 20px rgba(0, 0, 0, 0.2);
     visibility: hidden;
-    top: 2rem;
     opacity: 0;
+    overflow: hidden;
     transition: opacity 300ms ease-in-out;
   }
 
@@ -107,28 +91,21 @@ const StyledTranslator = styled(Translator)`
     opacity: 1;
   }
 
-  & ul li:first-child {
-    border-radius: 6px 6px 0 0;
-  }
-
-  & ul li:last-child {
-    border-radius: 0 0 6px 6px;
-  }
-
   & ul li {
     inline-size: 100%;
     text-align: center;
     padding-block: 0.5em;
     padding-inline: 0.5em;
-    background-color: #fff;
+    background-color: #ffffff75;
+  }
+
+  & ul li.selected {
+    background-color: rgba(200, 200, 200, 0.75);
+    pointer-events: none;
   }
 
   & ul li:hover {
     background-color: var(--sept-color);
-  }
-
-  .dark & {
-    color: var(--sept-color);
   }
 
   .dark & ul li {
@@ -137,10 +114,6 @@ const StyledTranslator = styled(Translator)`
 
   .dark & ul li:hover {
     background-color: var(--ter-color);
-  }
-
-  &.bump {
-    animation: ${bump} 500ms ease-in-out;
   }
 `;
 

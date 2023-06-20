@@ -1,4 +1,3 @@
-import {FC} from 'react';
 import styled from 'styled-components';
 import Header from './components/Header';
 import Game from './components/Game';
@@ -6,7 +5,7 @@ import './App.css';
 import {useContext} from 'react';
 import AppContext from './context/app-context';
 
-const App: FC<{className?: string}> = ({className}) => {
+const App = ({className}: {className?: string}) => {
   const {lang} = useContext(AppContext);
   return (
     <div className={`${className} ${lang === 'ar' ? 'rtl' : 'ltr'}`}>
@@ -39,7 +38,7 @@ const StyledApp = styled(App)`
   min-block-size: 100%;
   block-size: 100vh;
   transition: all 400ms ease;
-  font-family: sans-serif;
+  font-family: 'Atkinson', sans-serif;
   padding: 0;
 
   & > main {
@@ -61,10 +60,6 @@ const StyledApp = styled(App)`
     font-size: 1.15rem;
   }
 
-  :not(.rtl) :where(h1, h2, h3, h4, h5, h6) {
-    font-family: 'PT Serif', serif;
-  }
-
   &.rtl :where(h1, h2, h3, h4, h5, h6) {
     font-family: 'Uthman Taha';
   }
@@ -75,9 +70,7 @@ const StyledApp = styled(App)`
 
   button {
     margin: 0;
-    padding: 0;
     border: none;
-    background: transparent;
     cursor: pointer;
     color: inherit;
   }
