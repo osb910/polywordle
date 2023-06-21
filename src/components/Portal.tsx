@@ -1,4 +1,4 @@
-import {useState, useEffect, useId, ReactNode, useContext} from 'react';
+import {useState, useEffect, useId, ReactNode} from 'react';
 import {createPortal} from 'react-dom';
 
 const Portal = ({lang, children}: {lang?: string; children: ReactNode}) => {
