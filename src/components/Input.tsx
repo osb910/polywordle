@@ -38,10 +38,7 @@ const Input = ({
 };
 
 const Wrapper = styled.p.attrs({dir: 'auto'})`
-  label {
-    font: inherit;
-  }
-  input {
+  & input {
     padding: 0.25em;
     border: 0;
     border-radius: 6px;

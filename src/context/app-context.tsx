@@ -1,14 +1,11 @@
 import {createContext, useReducer, ReactNode} from 'react';
 
 interface AppState {
-  lang: string;
   // isAuthented: boolean;
   // currentUser: any;
   // theme: string;
 }
 interface AppContextProps {
-  lang: string;
-  setLang: (lang: string) => void;
   // isAuthented: null;
   // setAuth: (auth: null | string) => void;
   // currentUser: {};
@@ -22,8 +19,6 @@ interface AppProviderProps {
 }
 
 const AppContext = createContext<AppContextProps>({
-  lang: '',
-  setLang: () => {},
   // isAuthented: null,
   // setAuth: () => {},
   // currentUser: {},
@@ -47,7 +42,6 @@ type AppAction = {type: string; [key: string]: any};
 
 const appReducer = (state: AppState, action: AppAction): AppState => {
   const ACTIONS: {[key: string]: Function} = {
-    TRANSLATE: () => ({...state, lang: action.lang}),
     LOGIN: () => ({...state, isAuthented: true}),
     LOGOUT: () => ({...state, isAuthented: false}),
     CHANGE_USER: () => ({...state, currentUser: action.user}),
@@ -59,11 +53,6 @@ const appReducer = (state: AppState, action: AppAction): AppState => {
 
 export const AppProvider = ({children}: AppProviderProps): JSX.Element => {
   const [appState, dispatchApp] = useReducer(appReducer, defaultState);
-
-  const translate = (lang: string): void => {
-    dispatchApp({type: 'TRANSLATE', lang});
-    localStorage.setItem('state', JSON.stringify({...appState, lang}));
-  };
 
   // const authenticate = auth => {
   //   dispatchApp({type: auth});
@@ -88,16 +77,16 @@ export const AppProvider = ({children}: AppProviderProps): JSX.Element => {
 
   return (
     <AppContext.Provider
-      value={{
-        lang: appState.lang,
-        // isAuthented: appState.isAuthented,
-        // currentUser: appState.currentUser,
-        // theme: appState.theme,
-        setLang: translate,
-        // setAuth: authenticate,
-        // setUser: changeUser,
-        // setTheme: changeTheme,
-      }}
+      value={
+        {
+          // isAuthented: appState.isAuthented,
+          // currentUser: appState.currentUser,
+          // theme: appState.theme,
+          // setAuth: authenticate,
+          // setUser: changeUser,
+          // setTheme: changeTheme,
+        }
+      }
     >
       {children}
     </AppContext.Provider>

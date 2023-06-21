@@ -1,5 +1,5 @@
-import AppContext from '../../../../../context/app-context';
 import {memo, useContext, FC, MouseEvent, KeyboardEvent} from 'react';
+import LangContext from '../../../../../context/lang-context';
 
 export type ClickEvent = {
   [key: string]: string | MouseEvent | KeyboardEvent | boolean | any;
@@ -13,7 +13,7 @@ interface KeyButtonProps {
 }
 const KeyButton: FC<KeyButtonProps> = memo(
   ({btn, status, active, keyName, handleClick}) => {
-    const {lang} = useContext(AppContext);
+    const {lang} = useContext(LangContext);
     return (
       <button
         className={`${status ?? ''} ${active ? 'active' : ''}`}

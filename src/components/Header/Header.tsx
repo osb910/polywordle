@@ -1,48 +1,61 @@
 import {useContext, useState} from 'react';
 import styled from 'styled-components';
-import {Settings} from 'react-feather';
-import AppContext from '../../context/app-context';
+import {Settings, Info, RefreshCw, RefreshCcw} from 'react-feather';
 import Portal from '../Portal';
 import Modal from '../Modal';
 import Translator from '../Translator';
 import IconButton from '../IconButton';
 import SettingsPage from '../SettingsPage/SettingsPage';
 import headerL10n from '../../l10n/header-l10n';
+import LangContext from '../../context/lang-context';
+import languages from '../../l10n/languages';
+import Help from '../Help/Help';
+import GameContext from '../../context/game-context';
+import useTemporary from '../../hooks/use-temporary';
 
 const Header = ({className}: {className?: string}) => {
-  const {lang} = useContext(AppContext);
+  const {lang} = useContext(LangContext);
+  const {gameOver, resetGame} = useContext(GameContext);
   const [showSettings, setShowSettings] = useState<boolean>(false);
+  const [showHelp, setShowHelp] = useState<boolean>(false);
+
   const l10n = headerL10n[lang];
 
   const openSettings = () => setShowSettings(true);
   const closeSettings = () => setShowSettings(false);
+  const openHelp = () => setShowHelp(true);
+  const closeHelp = () => setShowHelp(false);
+
+  useTemporary(openHelp, {times: 2, delay: 1500});
 
   return (
     <header className={className}>
       <h1>{l10n.logo}</h1>
       <section className='settings app'>
-        <Translator
-          langs={[
-            {
-              name: 'English',
-              code: 'en',
-            },
-            {
-              name: 'العربية',
-              code: 'ar',
-            },
-          ]}
-        />
+        <Translator langs={languages} />
       </section>
       <section className='settings game'>
+        <IconButton
+          clickHandler={openHelp}
+          icon={<Info />}
+          highlightDeps={[showHelp]}
+          title={l10n.help}
+        />
         <IconButton
           clickHandler={openSettings}
           icon={<Settings />}
           highlightDeps={[showSettings]}
+          title={l10n.settings}
+        />
+        <IconButton
+          clickHandler={() => confirm(l10n.resetPrompt) && resetGame(lang)}
+          icon={lang === 'ar' ? <RefreshCcw /> : <RefreshCw />}
+          highlightDeps={[gameOver]}
+          title={l10n.resetBtn}
         />
       </section>
       {showSettings && (
-        <Portal>
+        <Portal lang={lang}>
           <Modal
             title={l10n.settings}
             dismiss={closeSettings}
@@ -50,6 +63,18 @@ const Header = ({className}: {className?: string}) => {
             lang={lang}
           >
             <SettingsPage dismiss={closeSettings} />
+          </Modal>
+        </Portal>
+      )}
+      {showHelp && (
+        <Portal lang={lang}>
+          <Modal
+            title={l10n.help}
+            dismiss={closeHelp}
+            dismissText='Dismiss'
+            lang={lang}
+          >
+            <Help />
           </Modal>
         </Portal>
       )}
@@ -83,6 +108,7 @@ const StyledHeader = styled(Header)`
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 0.5em;
   }
 
   & .settings.app {

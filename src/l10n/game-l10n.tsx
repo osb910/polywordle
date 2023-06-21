@@ -14,20 +14,20 @@ const gameL10n: {[key: string]: LangText} = {
     reset: 'Play again',
     wonMessage: (step: number): JSX.Element => {
       return (
-        <>
+        <p>
           <strong>Congratulations!</strong> Got it in{' '}
           <strong>
             {step} guess{step > 1 && 'es'}
           </strong>
           .
-        </>
+        </p>
       );
     },
     lostMessage: (word: string): JSX.Element => {
       return (
-        <>
-          Sorry, the correct wordle is <strong>{word}</strong>.
-        </>
+        <p>
+          Sorry, the correct wordle is <strong>«{word}»</strong>.
+        </p>
       );
     },
     unknownWord: 'Not in the word list',
@@ -45,8 +45,8 @@ const gameL10n: {[key: string]: LangText} = {
     reset: 'أعِد اللعبة',
     wonMessage: (step: number): JSX.Element => {
       return (
-        <>
-          <strong>مبارك!</strong> قد حللتها في{' '}
+        <p>
+          <strong>مبارك!</strong> قد حللتها من{' '}
           <strong>
             {step === 1
               ? 'أول'
@@ -72,14 +72,14 @@ const gameL10n: {[key: string]: LangText} = {
             تخمينة
           </strong>
           .
-        </>
+        </p>
       );
     },
     lostMessage: (word: string): JSX.Element => {
       return (
-        <>
-          معذرةً، الورد الصحيح هو <strong>{word}</strong>.
-        </>
+        <p>
+          معذرةً، الورد الصحيح هو <strong>«{word}»</strong>.
+        </p>
       );
     },
     unknownWord: 'ليست عندنا',

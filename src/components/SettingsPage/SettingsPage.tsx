@@ -3,9 +3,9 @@ import GameContext from '../../context/game-context';
 import styled from 'styled-components';
 import Input from '../Input';
 import Button from '../Button/Button';
-import AppContext from '../../context/app-context';
 import headerL10n from '../../l10n/header-l10n';
 import gameL10n from '../../l10n/game-l10n';
+import LangContext from '../../context/lang-context';
 
 type SettingsPageProps = {
   dismiss?: Function;
@@ -14,7 +14,7 @@ type SettingsPageProps = {
 const SettingsPage = ({dismiss}: SettingsPageProps) => {
   const {numOfAttempts, setNumOfAttempts, lettersPerWord, setLettersPerWord} =
     useContext(GameContext);
-  const {lang} = useContext(AppContext);
+  const {lang} = useContext(LangContext);
   const [newNumOfAttempts, setNewNumOfAttempts] =
     useState<number>(numOfAttempts);
   const [newLettersPerWord, setNewLettersPerWord] =
@@ -37,7 +37,7 @@ const SettingsPage = ({dismiss}: SettingsPageProps) => {
 
   return (
     <Wrapper>
-      <h2>{l10n.settings}</h2>
+      <h1>{l10n.settings}</h1>
       <form onSubmit={saveSettings}>
         <Input
           label={l10n.numOfAttempts}
@@ -77,8 +77,8 @@ const Wrapper = styled.div`
   border-radius: inherit;
   transition: all 400ms ease;
 
-  & h2 {
-    font-size: 1.5rem;
+  & h1 {
+    font-size: 2rem;
     font-weight: 700;
   }
 

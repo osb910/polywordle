@@ -1,28 +1,30 @@
 import {useContext, MouseEvent} from 'react';
 import {Globe} from 'react-feather';
 import styled from 'styled-components';
-import AppContext from '../context/app-context';
 import IconButton from './IconButton';
 import headerL10n from '../l10n/header-l10n';
+import LangContext from '../context/lang-context';
+import useUpdateHead from '../hooks/use-update-head';
+import {Language} from '../l10n/languages';
 
-export type TranslatorProps = {
-  langs: {
-    name: string;
-    code: string;
-  }[];
+export interface TranslatorProps {
+  langs: Language[];
   langDisplay?: string;
   className?: string;
-};
+}
 
 const Translator = ({langs, langDisplay, className}: TranslatorProps) => {
-  const {lang, setLang} = useContext(AppContext);
-  const l10n = headerL10n[lang];
+  const {lang, translate} = useContext(LangContext);
+  let l10n = headerL10n[lang];
+
+  useUpdateHead(lang, l10n.title);
 
   const changeLang = (evt: MouseEvent<HTMLLIElement>): void => {
     const newLang = (evt.target as HTMLLIElement).dataset.lang;
     if (!newLang || lang === newLang) return;
     const confirmReset = confirm(l10n.resetPrompt);
-    confirmReset && setLang(newLang);
+    confirmReset && translate(newLang);
+    l10n = headerL10n[newLang];
   };
 
   return (
@@ -30,6 +32,7 @@ const Translator = ({langs, langDisplay, className}: TranslatorProps) => {
       icon={<Globe />}
       className={`${className}`}
       highlightDeps={[lang]}
+      title={l10n.language}
     >
       {langDisplay && <div className='current-lang'>{langDisplay}</div>}
       <ul>
@@ -70,14 +73,14 @@ const StyledTranslator = styled(Translator)`
   & ul {
     position: absolute;
     inset-block-start: 2rem;
+    padding: 0;
+    border: 2px solid var(--sec-color);
+    border-radius: var(--border-radius);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     list-style-type: none;
-    padding: 0;
-    border: 2px solid var(--sec-color);
-    border-radius: var(--border-radius);
     cursor: pointer;
     box-shadow: 1px 2px 20px rgba(0, 0, 0, 0.2);
     visibility: hidden;

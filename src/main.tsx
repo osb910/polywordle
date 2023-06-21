@@ -1,19 +1,22 @@
 import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
-import App from './App.tsx';
-import {AppProvider} from './context/app-context.tsx';
+import {LangProvider} from './context/lang-context.tsx';
 import {GameProvider} from './context/game-context.tsx';
 import GlobalReset from './components/GlobalStyles.tsx';
+import App from './App.tsx';
+import {ToastProvider} from './context/toast-context.tsx';
 
 const root = createRoot(document.querySelector('#root') as HTMLElement);
 
 root.render(
   <StrictMode>
-    <AppProvider>
-      <GameProvider>
-        <GlobalReset />
-        <App />
-      </GameProvider>
-    </AppProvider>
+    <LangProvider>
+      <ToastProvider>
+        <GameProvider>
+          <GlobalReset />
+          <App />
+        </GameProvider>
+      </ToastProvider>
+    </LangProvider>
   </StrictMode>
 );

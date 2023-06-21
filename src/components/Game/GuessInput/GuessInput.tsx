@@ -6,38 +6,40 @@ import {
   useId,
   KeyboardEvent,
   ChangeEvent,
-  Dispatch,
-  SetStateAction,
 } from 'react';
 import styled from 'styled-components';
-import Keyboard from './Keyboard';
-import AppContext from '../../../context/app-context';
 import GameContext from '../../../context/game-context';
-import gameL10n from '../../../l10n/game-l10n';
+import LangContext from '../../../context/lang-context';
+import ToastContext from '../../../context/toast-context';
+import {ClickEvent} from './Keyboard/KeyButton';
+import Keyboard from './Keyboard';
+import Button from '../../Button';
 import {
   addGuess,
   checkGuess,
   fillGuess,
   getWordleBoard,
 } from '../../../lib/game-logic';
+import gameL10n from '../../../l10n/game-l10n';
 import WORDLES from '../../../lib/data/data';
 // import shuffleSfx from '../../../assets/sfx/shuffling-cards.mp3';
-import {ClickEvent} from './Keyboard/KeyButton';
 
 interface GuessInputProps {
-  setError: Dispatch<SetStateAction<string | null>>;
   className?: string;
 }
 
-const GuessInput = ({className, setError}: GuessInputProps) => {
+const GuessInput = ({className}: GuessInputProps) => {
   const [guessInput, setGuessInput] = useState<string>('');
   const [evaluating, setEvaluating] = useState<boolean>(false);
-  const {lang} = useContext(AppContext);
+  const {lang} = useContext(LangContext);
+  const {createToast} = useContext(ToastContext);
+
   const {
     guesses,
     setGuesses,
     wordle,
     gameOver,
+    gameWon,
     setGameOver,
     setGameWon,
     step,
@@ -51,6 +53,34 @@ const GuessInput = ({className, setError}: GuessInputProps) => {
 
   const l10n = gameL10n[lang];
   const WORDS = WORDLES[lang][lettersPerWord];
+
+  useEffect(() => {
+    if (!gameOver || evaluating) return;
+    const ResetButton = () => (
+      <Button
+        className='resetBtn'
+        variant='outline'
+        size='small'
+        onClick={() => resetGame(lang)}
+      >
+        {l10n.reset}
+      </Button>
+    );
+    createToast(
+      gameWon ? 'success' : 'error',
+      <>
+        {gameWon
+          ? l10n.wonMessage(Math.min(step, numOfAttempts))
+          : l10n.lostMessage(wordle)}
+        <ResetButton />
+      </>
+    );
+    // setTimeout(() => {
+    //   // const resetBtn = document.querySelector('.resetBtn') as HTMLButtonElement;
+    //   // console.log(resetBtn);
+    //   // resetBtn?.focus();
+    // }, 0);
+  }, [gameOver, gameWon, evaluating]);
 
   const changeGuess = useCallback(
     (value: string): void => {
@@ -67,7 +97,7 @@ const GuessInput = ({className, setError}: GuessInputProps) => {
   const submitGuess = useCallback((): Function | undefined => {
     if (guessInput.length < wordle.length) return;
     if (!WORDS.includes(guessInput)) {
-      setError(l10n.unknownWord);
+      createToast('warning', l10n.unknownWord);
       changeGuess('');
       return;
     }
@@ -79,7 +109,9 @@ const GuessInput = ({className, setError}: GuessInputProps) => {
     // sfxRef.current!.play();
     setEvaluating(true);
     setGuessInput('');
-    const timeoutId = setTimeout(() => setEvaluating(false), 2000);
+    const timeoutId = setTimeout(() => {
+      setEvaluating(false);
+    }, 2000);
 
     if (guessInput === wordle) {
       setGameWon(true);
@@ -90,7 +122,9 @@ const GuessInput = ({className, setError}: GuessInputProps) => {
 
     setStep(step + 1);
 
-    step === numOfAttempts && setGameOver(true);
+    if (step === numOfAttempts) {
+      setGameOver(true);
+    }
 
     return () => clearTimeout(timeoutId);
   }, [
@@ -98,11 +132,6 @@ const GuessInput = ({className, setError}: GuessInputProps) => {
     WORDS,
     guesses,
     numOfAttempts,
-    setError,
-    setGameOver,
-    setGameWon,
-    setGuesses,
-    setStep,
     step,
     wordle,
     changeGuess,
@@ -122,7 +151,7 @@ const GuessInput = ({className, setError}: GuessInputProps) => {
       //     : key;
       if (evaluating) return;
       if (gameOver) {
-        key === 'Enter' && resetGame(lang);
+        // key === 'Enter' && resetGame(lang);
         return;
       }
 

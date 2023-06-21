@@ -10,7 +10,6 @@ interface GridProps {
 
 const Grid = ({className}: GridProps) => {
   const {guesses} = useContext(GameContext);
-  console.log(guesses);
   return (
     <ol className={className}>
       {guesses.map(({word, id}, idx) => (

@@ -1,4 +1,4 @@
-import {ReactNode, MouseEventHandler, useState, useEffect} from 'react';
+import {ReactNode, MouseEventHandler} from 'react';
 import styled from 'styled-components';
 import {bump} from './animations/keyframes';
 
@@ -8,6 +8,7 @@ export type IconButtonProps = {
   className?: string;
   clickHandler?: MouseEventHandler<HTMLButtonElement>;
   highlightDeps?: any[];
+  [x: string]: any;
 };
 
 const IconButton = ({
@@ -16,25 +17,18 @@ const IconButton = ({
   className,
   clickHandler,
   highlightDeps,
-}: IconButtonProps) => {
-  const [highlighted, setHighlighted] = useState<boolean>(false);
-
-  useEffect(() => {
-    setHighlighted(true);
-    let timer = setTimeout(() => setHighlighted(false), 700);
-    return () => clearTimeout(timer);
-  }, highlightDeps ?? []);
-
-  return (
-    <Wrapper
-      className={`${className} ${highlighted ? 'bump' : ''}`}
-      onClick={clickHandler}
-    >
-      {icon}
-      {children}
-    </Wrapper>
-  );
-};
+  ...delegated
+}: IconButtonProps) => (
+  <Wrapper
+    className={`${className ?? ''} bump`}
+    onClick={clickHandler}
+    key={highlightDeps?.join('')}
+    {...delegated}
+  >
+    {icon}
+    {children}
+  </Wrapper>
+);
 
 const Wrapper = styled.button`
   --sec-color: #a8dadc;
@@ -50,7 +44,6 @@ const Wrapper = styled.button`
   justify-content: center;
   padding: 0.4em;
   margin-block: 0;
-  margin-inline: 0.8em;
   border-radius: 1rem;
   background-color: var(--sept-color);
   cursor: pointer;
@@ -76,7 +69,7 @@ const Wrapper = styled.button`
   }
 
   &.bump {
-    animation: ${bump} 500ms ease-in-out;
+    animation: ${bump} 400ms ease-in-out;
   }
 `;
 

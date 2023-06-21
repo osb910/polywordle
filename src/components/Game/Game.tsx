@@ -1,25 +1,21 @@
-import {useState, useContext, useEffect, useRef} from 'react';
-import AppContext from '../../context/app-context';
+import {useContext, useEffect} from 'react';
 import Grid from './Grid';
 import GuessInput from './GuessInput/GuessInput';
-import WonBanner from './WonBanner';
-import LostBanner from './LostBanner';
-import Banner from './Banner';
-import gameL10n from '../../l10n/game-l10n';
 import GameContext from '../../context/game-context';
+import LangContext from '../../context/lang-context';
+import Toaster from '../Toaster/Toaster';
+import ToastContext from '../../context/toast-context';
 
 const Game = () => {
-  const {lang} = useContext(AppContext);
-  const {gameOver, gameWon, resetGame, numOfAttempts, lettersPerWord} =
+  const {lang} = useContext(LangContext);
+  const {gameOver, resetGame, numOfAttempts, lettersPerWord} =
     useContext(GameContext);
-
-  const [error, setError] = useState<null | string>(null);
-  const okRef = useRef(null);
-  const l10n = gameL10n[lang];
+  const {clearToasts} = useContext(ToastContext);
 
   useEffect(() => {
     gameOver && resetGame(lang);
     resetGame(lang);
+    clearToasts();
   }, [lang, numOfAttempts, lettersPerWord]);
 
   useEffect(() => {
@@ -27,19 +23,11 @@ const Game = () => {
   }, []);
 
   return (
-    <>
+    <main>
       <Grid />
-      <GuessInput setError={setError} />
-      {gameOver ? gameWon ? <WonBanner /> : <LostBanner /> : null}
-      {error && (
-        <Banner status='warning'>
-          <p>{error}</p>
-          <button type='button' ref={okRef} onClick={() => setError(null)}>
-            {l10n.ok}
-          </button>
-        </Banner>
-      )}
-    </>
+      <GuessInput />
+      <Toaster />
+    </main>
   );
 };
 

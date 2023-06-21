@@ -84,13 +84,17 @@ const Wrapper = styled.aside`
   }
 
   & .modal {
-    max-block-size: 85vh;
+    inset-block-start: 0.5rem;
+    max-block-size: 90vh;
     position: relative;
-    background: white;
+    padding-block: 1.25em;
+    padding-inline: 1.25em;
     border-radius: 0.5rem;
-    padding: 1.5em;
-    animation: ${appear} 350ms ease-in-out both;
+    background: white;
     font-family: 'Atkinson', sans-serif;
+    overflow-y: auto;
+    overflow-x: hidden;
+    animation: ${appear} 350ms ease-in-out both;
   }
 
   & .modal.rtl {
@@ -105,12 +109,16 @@ const Wrapper = styled.aside`
     position: absolute;
     inset-block-start: 0;
     inset-inline-end: 0;
-    padding: 1em;
-    color: white;
+    padding: 0.25em;
+    color: inherit;
     background-color: transparent;
     border: none;
-    transform: translateY(-100%);
     cursor: pointer;
+    transition: transform 300ms ease-in-out;
+  }
+
+  & .dismissBtn:hover {
+    transform: scale(1.2) rotate(-90deg);
   }
 `;
 

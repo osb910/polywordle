@@ -1,9 +1,9 @@
 import {memo, useContext} from 'react';
 import styled, {ThemeProvider} from 'styled-components';
-import AppContext from '../../../../context/app-context';
 import {bump, closeGap, flipInX} from '../../../animations/keyframes';
 import GameContext from '../../../../context/game-context';
 import {isKashidable, kashidify} from '../../../../lib/utils';
+import LangContext from '../../../../context/lang-context';
 
 type Letter = {
   letter: string;
@@ -17,7 +17,7 @@ interface GuessProps {
 }
 
 const Guess = memo(({word, step, className}: GuessProps) => {
-  const {lang} = useContext(AppContext);
+  const {lang} = useContext(LangContext);
   const {step: gameStep, gameOver} = useContext(GameContext);
   return (
     <ul
@@ -53,7 +53,13 @@ const StyledGuess = styled(Guess)`
 
   &::before {
     content: ${({theme, step}) =>
-      `'${theme.lang === 'ar' ? (+step).toLocaleString('ar-EG') : step}'`};
+      `'${
+        step === 0
+          ? ''
+          : theme.lang === 'ar'
+          ? (+step).toLocaleString('ar-EG')
+          : step
+      }'`};
     position: absolute;
     z-index: -1;
     inset-inline-start: -0.9em;
@@ -149,7 +155,7 @@ interface GuessWithContextProps {
 }
 
 const GuessWithContext = ({word, step}: GuessWithContextProps) => {
-  const {lang} = useContext(AppContext);
+  const {lang} = useContext(LangContext);
   const {lettersPerWord} = useContext(GameContext);
 
   return (

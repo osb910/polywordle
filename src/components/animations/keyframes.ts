@@ -1,5 +1,11 @@
 import {keyframes} from 'styled-components';
 
+export const slideInX = (x: number) => keyframes`
+  from {
+    transform: translateX(${x}%);
+  }
+`;
+
 export const appear = keyframes`
   0% {
     opacity: 0;
