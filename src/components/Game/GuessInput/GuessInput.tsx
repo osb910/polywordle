@@ -10,7 +10,6 @@ import {
 import styled from 'styled-components';
 import GameContext from '../../../context/game-context';
 import LangContext from '../../../context/lang-context';
-import ToastContext from '../../../context/toast-context';
 import {ClickEvent} from './Keyboard/KeyButton';
 import Keyboard from './Keyboard';
 import Button from '../../Button';
@@ -22,6 +21,7 @@ import {
 } from '../../../lib/game-logic';
 import gameL10n from '../../../l10n/game-l10n';
 import WORDLES from '../../../lib/data/data';
+import useToaster from '../../Toaster/use-toaster';
 // import shuffleSfx from '../../../assets/sfx/shuffling-cards.mp3';
 
 interface GuessInputProps {
@@ -32,7 +32,7 @@ const GuessInput = ({className}: GuessInputProps) => {
   const [guessInput, setGuessInput] = useState<string>('');
   const [evaluating, setEvaluating] = useState<boolean>(false);
   const {lang} = useContext(LangContext);
-  const {createToast} = useContext(ToastContext);
+  const {createToast} = useToaster();
 
   const {
     guesses,

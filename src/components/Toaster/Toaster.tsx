@@ -1,18 +1,22 @@
+'use client';
+
 import {useContext} from 'react';
-import styled from 'styled-components';
 
 import Portal from '../Portal';
 import Toast from './Toast';
-import ToastContext from '../../context/toast-context';
 import LangContext from '../../context/lang-context';
+import useToaster from './use-toaster';
+import StyledToaster from './StyledToaster';
+// @ts-ignore
+import styles from './Toaster.module.css';
 
 const Toaster = () => {
-  const {toasts, dismissToast} = useContext(ToastContext);
+  const {toasts, dismissToast} = useToaster();
   const {lang} = useContext(LangContext);
   return (
     <Portal lang={lang}>
-      <Wrapper
-        className='toaster'
+      <StyledToaster
+        className={`toaster`}
         role='region'
         aria-live='polite'
         aria-label='Notification'
@@ -27,20 +31,9 @@ const Toaster = () => {
             {message}
           </Toast>
         ))}
-      </Wrapper>
+      </StyledToaster>
     </Portal>
   );
 };
-
-const Wrapper = styled.ol`
-  position: fixed;
-  inset-block-end: 1rem;
-  inset-inline-end: 1rem;
-  display: flex;
-  flex-direction: column-reverse;
-  gap: 1em;
-  padding: 1em;
-  list-style-type: none;
-`;
 
 export default Toaster;

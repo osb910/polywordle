@@ -3,24 +3,20 @@ import Grid from './Grid';
 import GuessInput from './GuessInput/GuessInput';
 import GameContext from '../../context/game-context';
 import LangContext from '../../context/lang-context';
-import Toaster from '../Toaster/Toaster';
-import ToastContext from '../../context/toast-context';
+import Toaster from '../Toaster';
+import useToaster from '../Toaster/use-toaster';
 
 const Game = () => {
   const {lang} = useContext(LangContext);
   const {gameOver, resetGame, numOfAttempts, lettersPerWord} =
     useContext(GameContext);
-  const {clearToasts} = useContext(ToastContext);
+  const {clearToasts} = useToaster();
 
   useEffect(() => {
     gameOver && resetGame(lang);
     resetGame(lang);
     clearToasts();
   }, [lang, numOfAttempts, lettersPerWord]);
-
-  useEffect(() => {
-    // error && okRef.current.focus(); // BUG: clicks on mount
-  }, []);
 
   return (
     <main>

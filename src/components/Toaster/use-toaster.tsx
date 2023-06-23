@@ -1,6 +1,8 @@
-import {createContext, useMemo, ReactNode, useEffect} from 'react';
+'use client';
+
+import {createContext, useMemo, ReactNode, useEffect, useContext} from 'react';
 import {useImmer} from 'use-immer';
-import useHotKeys, {HotKey} from '../hooks/use-hotkeys';
+import useHotKeys, {HotKey} from '../../hooks/use-hotkeys';
 
 export type Toast = {
   id: string;
@@ -76,4 +78,13 @@ export const ToastProvider = ({
   );
 };
 
-export default ToastContext;
+const useToaster = () => {
+  const data = useContext(ToastContext);
+
+  if (!data)
+    throw new Error('Cannot consume Toast context without a ToastProvider');
+
+  return data;
+};
+
+export default useToaster;
