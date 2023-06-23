@@ -1,7 +1,7 @@
 import {memo, useContext} from 'react';
 import styled, {ThemeProvider} from 'styled-components';
 import {bump, closeGap, flipInX} from '../../../animations/keyframes';
-import GameContext from '../../../../context/game-context';
+import GameContext from '../../game-context';
 import {isKashidable, kashidify} from '../../../../lib/utils';
 import LangContext from '../../../../context/lang-context';
 

@@ -3,14 +3,14 @@
 import {Volume2, VolumeX} from 'react-feather';
 import useSoundEnabled from './sound-enabled';
 import VisuallyHidden from '../VisuallyHidden';
-import IconButton from '../IconButton';
+import IconButton from '../IconButton/IconButton';
 
 const SoundToggler = ({dir}: {dir?: string}) => {
   const {soundEnabled, toggleSound} = useSoundEnabled();
 
   return (
     <IconButton
-      onClick={() => toggleSound()}
+      onClick={toggleSound}
       icon={soundEnabled ? <Volume2 /> : <VolumeX />}
       className={dir}
       highlightDeps={[soundEnabled]}

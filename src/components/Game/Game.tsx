@@ -1,7 +1,7 @@
 import {useContext, useEffect} from 'react';
 import Grid from './Grid';
 import GuessInput from './GuessInput/GuessInput';
-import GameContext from '../../context/game-context';
+import GameContext from './game-context';
 import LangContext from '../../context/lang-context';
 import Toaster from '../Toaster';
 import useToaster from '../Toaster/use-toaster';

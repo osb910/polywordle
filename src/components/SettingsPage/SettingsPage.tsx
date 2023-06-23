@@ -1,5 +1,5 @@
 import {useContext, useState, FormEvent} from 'react';
-import GameContext from '../../context/game-context';
+import GameContext from '../Game/game-context';
 import styled from 'styled-components';
 import Input from '../Input';
 import Button from '../Button/Button';

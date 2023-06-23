@@ -8,7 +8,7 @@ import {
   ChangeEvent,
 } from 'react';
 import styled from 'styled-components';
-import GameContext from '../../../context/game-context';
+import GameContext from '../game-context';
 import LangContext from '../../../context/lang-context';
 import {ClickEvent} from './Keyboard/KeyButton';
 import Keyboard from './Keyboard';
@@ -35,7 +35,6 @@ const GuessInput = ({className}: GuessInputProps) => {
   const [evaluating, setEvaluating] = useState<boolean>(false);
   const {lang} = useContext(LangContext);
   const {createToast} = useToaster();
-
   const {
     guesses,
     setGuesses,
@@ -54,6 +53,24 @@ const GuessInput = ({className}: GuessInputProps) => {
   const {soundEnabled} = useSoundEnabled();
   const [playShuffle] = useSound('/shuffling-cards.mp3', {
     soundEnabled,
+    playbackRate: 0.9,
+    volume: 0.5,
+  });
+  const [playCongrats] = useSound('/fanfare.mp3', {
+    soundEnabled,
+    volume: 0.5,
+  });
+  const [playHardLuck] = useSound('/dun-dun-dun.mp3', {
+    soundEnabled,
+    volume: 0.5,
+  });
+  const [playWarning] = useSound('/warning.mp3', {
+    soundEnabled,
+    volume: 0.5,
+  });
+  const [playTyping] = useSound('/typing.mp3', {
+    soundEnabled,
+    volume: 0.5,
   });
 
   const l10n = gameL10n[lang];
@@ -80,6 +97,7 @@ const GuessInput = ({className}: GuessInputProps) => {
         <ResetButton />
       </>
     );
+    gameWon ? playCongrats() : playHardLuck();
   }, [gameOver, gameWon, evaluating]);
 
   const changeGuess = useCallback(
@@ -87,6 +105,7 @@ const GuessInput = ({className}: GuessInputProps) => {
       const input = value.toUpperCase();
       if (lang === 'ar' && /[^\p{Script=Arabic}]/u.test(input)) return;
       if (lang === 'en' && /[^A-Za-z]/.test(input)) return;
+      playTyping();
       setGuessInput(input);
       const newGuesses = fillGuess(guesses, input, step);
       setGuesses(newGuesses);
@@ -97,6 +116,7 @@ const GuessInput = ({className}: GuessInputProps) => {
   const submitGuess = useCallback((): Function | undefined => {
     if (guessInput.length < wordle.length) return;
     if (!WORDS.includes(guessInput)) {
+      playWarning();
       createToast('warning', l10n.unknownWord);
       changeGuess('');
       return;
@@ -111,7 +131,7 @@ const GuessInput = ({className}: GuessInputProps) => {
     setGuessInput('');
     const timeoutId = setTimeout(() => {
       setEvaluating(false);
-    }, 2000);
+    }, lettersPerWord * 400 + 600);
 
     if (guessInput === wordle) {
       setGameWon(true);

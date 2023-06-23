@@ -10,7 +10,7 @@ const headerL10n: {[key: string]: LangText} = {
     settings: 'Settings',
     dismissSettings: 'Close Settings',
     save: 'Save',
-    resetPrompt: 'This resets the game. Continue?',
+    resetPrompt: 'Reset the game?',
     language: 'Language',
     howToPlay: 'How To Play',
     gameRules: [
@@ -134,7 +134,7 @@ const headerL10n: {[key: string]: LangText} = {
     settings: 'الضبط',
     dismissSettings: 'أغلِق الضبط',
     save: 'احفظ',
-    resetPrompt: 'هذا يصفّر اللعبة، هل نتابع؟',
+    resetPrompt: 'أنُصفّر اللعبة؟',
     language: 'اللغة',
     howToPlay: 'طريقة اللعب',
     gameRules: [
@@ -236,7 +236,7 @@ const headerL10n: {[key: string]: LangText} = {
     ],
     credit: (
       <p>
-        هذه نسخة من الوِرد متعددة اللغات والخيارات قام بإنشائها وتوطينها{' '}
+        هذه نسخة من لعبة الوِرد متعددة اللغات والخيارات، قام بإنشائها وتوطينها{' '}
         <a
           href='https://github.com/osb910/polywordle'
           target='_blank'

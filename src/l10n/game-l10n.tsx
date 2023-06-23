@@ -82,7 +82,7 @@ const gameL10n: {[key: string]: LangText} = {
         </p>
       );
     },
-    unknownWord: 'ليست عندنا',
+    unknownWord: 'ليست من كلمات اللعبة',
     numOfAttempts: 'عدد المحاولات',
     lettersPerWord: 'عدد أحرف الكلمة',
   },

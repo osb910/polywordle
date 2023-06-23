@@ -1,7 +1,7 @@
 import {useContext} from 'react';
 import styled from 'styled-components';
 import Guess from './Guess';
-import GameContext from '../../../context/game-context';
+import GameContext from '../game-context';
 
 interface GridProps {
   className?: string;

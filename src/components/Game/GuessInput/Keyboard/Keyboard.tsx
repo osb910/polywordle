@@ -2,7 +2,7 @@ import {memo, useCallback, useEffect, useState, KeyboardEvent} from 'react';
 import styled, {css} from 'styled-components';
 import {flipInX} from '../../../animations/keyframes';
 import {useContext} from 'react';
-import GameContext from '../../../../context/game-context';
+import GameContext from '../../game-context';
 import gameL10n from '../../../../l10n/game-l10n';
 import KeyButton from './KeyButton/KeyButton';
 import {ClickEvent} from './KeyButton/KeyButton';

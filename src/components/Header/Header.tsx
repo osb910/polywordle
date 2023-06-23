@@ -10,9 +10,10 @@ import headerL10n from '../../l10n/header-l10n';
 import LangContext from '../../context/lang-context';
 import languages from '../../l10n/languages';
 import Help from '../Help/Help';
-import GameContext from '../../context/game-context';
+import GameContext from '../Game/game-context';
 import useTemporary from '../../hooks/use-temporary';
 import SoundToggler from '../SoundToggler/SoundToggler';
+// @ts-ignore
 
 const Header = ({className}: {className?: string}) => {
   const {lang} = useContext(LangContext);

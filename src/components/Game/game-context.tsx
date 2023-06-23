@@ -1,6 +1,6 @@
 import {createContext, useMemo, ReactNode} from 'react';
 import {useImmerReducer} from 'use-immer';
-import {getInitialGuesses, getWordle} from '../lib/game-logic';
+import {getInitialGuesses, getWordle} from '../../lib/game-logic';
 
 type Letter = {
   letter: string;

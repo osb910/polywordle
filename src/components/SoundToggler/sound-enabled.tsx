@@ -1,6 +1,8 @@
 'use client';
 
 import {createContext, ReactNode, useContext, useEffect, useState} from 'react';
+// @ts-ignore
+import useSound from 'use-sound';
 
 export interface SoundContextProps {
   soundEnabled: boolean;
@@ -21,7 +23,10 @@ export const SoundProvider = ({
     const storedValue = window.localStorage.getItem('soundEnabled');
     return storedValue ? storedValue === 'true' : true;
   });
+  const [amplify] = useSound('/activate.mp3', {soundEnabled: true});
+  const [mute] = useSound('/abort.mp3', {soundEnabled: true});
   useEffect(() => {
+    soundEnabled ? amplify() : mute();
     window.localStorage.setItem('soundEnabled', soundEnabled.toString());
   }, [soundEnabled]);
 

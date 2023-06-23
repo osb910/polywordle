@@ -1,34 +1,22 @@
-import {ReactNode, MouseEventHandler} from 'react';
-import styled from 'styled-components';
-import {bump} from './animations/keyframes';
+import styled, {keyframes} from 'styled-components';
 
-export type IconButtonProps = {
-  icon: JSX.Element;
-  children?: ReactNode;
-  className?: string;
-  clickHandler?: MouseEventHandler<HTMLButtonElement>;
-  highlightDeps?: any[];
-  [x: string]: any;
-};
-
-const IconButton = ({
-  icon,
-  children,
-  className,
-  clickHandler,
-  highlightDeps,
-  ...delegated
-}: IconButtonProps) => (
-  <Wrapper
-    className={`${className ?? ''} bump`}
-    onClick={clickHandler}
-    key={highlightDeps?.join('')}
-    {...delegated}
-  >
-    {icon}
-    {children}
-  </Wrapper>
-);
+const bump = keyframes`
+  0% {
+    transform: scale(1);
+  }
+  10% {
+    transform: scale(0.95);
+  }
+  30% {
+    transform: scale(1.04);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+`;
 
 const Wrapper = styled.button`
   --sec-color: #a8dadc;
@@ -89,4 +77,4 @@ const Wrapper = styled.button`
   }
 `;
 
-export default IconButton;
+export default Wrapper;
