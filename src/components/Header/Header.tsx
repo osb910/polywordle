@@ -12,6 +12,7 @@ import languages from '../../l10n/languages';
 import Help from '../Help/Help';
 import GameContext from '../../context/game-context';
 import useTemporary from '../../hooks/use-temporary';
+import SoundToggler from '../SoundToggler/SoundToggler';
 
 const Header = ({className}: {className?: string}) => {
   const {lang} = useContext(LangContext);
@@ -33,6 +34,7 @@ const Header = ({className}: {className?: string}) => {
       <h1>{l10n.logo}</h1>
       <section className='settings app'>
         <Translator langs={languages} />
+        <SoundToggler dir={lang === 'ar' ? 'rtl' : 'ltr'} />
       </section>
       <section className='settings game'>
         <IconButton

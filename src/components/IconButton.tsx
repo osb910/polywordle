@@ -42,22 +42,38 @@ const Wrapper = styled.button`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0.4em;
+  padding: 0.25em;
   margin-block: 0;
-  border-radius: 1rem;
+  border-radius: 50%;
   background-color: var(--sept-color);
   cursor: pointer;
   font-family: 'Calibri';
   color: var(--hex-color);
   box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.15);
   transition: all 200ms ease-in-out;
+  border: 3px solid hsl(0deg 0% 85%);
+  border-block-start-color: hsl(0deg 0% 100%);
+  border-block-end-color: hsl(0deg 0% 70%);
+  background: hsl(0deg 0% 93%);
+
+  &:active {
+    border-block-start-color: hsl(0deg 0% 60%);
+    border-inline-start-color: hsl(0deg 0% 75%);
+    border-inline-end-color: hsl(0deg 0% 75%);
+    border-block-end-color: hsl(0deg 0% 92%);
+    background: hsl(0deg 0% 85%);
+  }
 
   &:where(:hover, :focus) {
     transform: scale(1.1);
   }
 
-  & img {
-    width: 1.5rem;
+  &.rtl svg {
+    transform: scaleX(-1);
+  }
+
+  & svg {
+    width: 22px;
     margin: 0;
     stroke: var(--hex-color);
     color: var(--hex-color);

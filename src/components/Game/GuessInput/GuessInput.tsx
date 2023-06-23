@@ -22,7 +22,9 @@ import {
 import gameL10n from '../../../l10n/game-l10n';
 import WORDLES from '../../../lib/data/data';
 import useToaster from '../../Toaster/use-toaster';
-// import shuffleSfx from '../../../assets/sfx/shuffling-cards.mp3';
+// @ts-ignore
+import useSound from 'use-sound';
+import useSoundEnabled from '../../SoundToggler/sound-enabled';
 
 interface GuessInputProps {
   className?: string;
@@ -49,7 +51,10 @@ const GuessInput = ({className}: GuessInputProps) => {
     lettersPerWord,
   } = useContext(GameContext);
   const id = useId();
-  // const sfxRef = useRef<HTMLAudioElement | null>(null);
+  const {soundEnabled} = useSoundEnabled();
+  const [playShuffle] = useSound('/shuffling-cards.mp3', {
+    soundEnabled,
+  });
 
   const l10n = gameL10n[lang];
   const WORDS = WORDLES[lang][lettersPerWord];
@@ -75,11 +80,6 @@ const GuessInput = ({className}: GuessInputProps) => {
         <ResetButton />
       </>
     );
-    // setTimeout(() => {
-    //   // const resetBtn = document.querySelector('.resetBtn') as HTMLButtonElement;
-    //   // console.log(resetBtn);
-    //   // resetBtn?.focus();
-    // }, 0);
   }, [gameOver, gameWon, evaluating]);
 
   const changeGuess = useCallback(
@@ -106,7 +106,7 @@ const GuessInput = ({className}: GuessInputProps) => {
     const newGuesses = addGuess(guesses, word, step);
     setGuesses(newGuesses);
 
-    // sfxRef.current!.play();
+    playShuffle();
     setEvaluating(true);
     setGuessInput('');
     const timeoutId = setTimeout(() => {
@@ -236,12 +236,6 @@ const GuessInput = ({className}: GuessInputProps) => {
         }
       />
       <Keyboard onClick={handleKeyDown} lang={lang} />
-      {/* <audio
-        id='shuffle-sfx'
-        ref={sfxRef}
-        src={shuffleSfx}
-        preload='auto'
-      ></audio> */}
     </form>
   );
 };
