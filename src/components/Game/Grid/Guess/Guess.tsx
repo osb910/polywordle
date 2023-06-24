@@ -3,7 +3,6 @@ import styled, {ThemeProvider} from 'styled-components';
 import {bump, closeGap, flipInX} from '../../../animations/keyframes';
 import GameContext from '../../game-context';
 import {isKashidable, kashidify} from '../../../../lib/utils';
-import LangContext from '../../../Localizer/use-localizer';
 import useLocalizer from '../../../Localizer/use-localizer';
 
 type Letter = {
