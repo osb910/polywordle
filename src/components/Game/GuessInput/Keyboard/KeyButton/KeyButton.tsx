@@ -1,5 +1,5 @@
-import {memo, useContext, FC, MouseEvent, KeyboardEvent} from 'react';
-import LangContext from '../../../../../context/lang-context';
+import {memo, FC, MouseEvent, KeyboardEvent} from 'react';
+import useLocalizer from '../../../../Localizer/use-localizer';
 
 export type ClickEvent = {
   [key: string]: string | MouseEvent | KeyboardEvent | boolean | any;
@@ -13,7 +13,7 @@ interface KeyButtonProps {
 }
 const KeyButton: FC<KeyButtonProps> = memo(
   ({btn, status, active, keyName, handleClick}) => {
-    const {lang} = useContext(LangContext);
+    const {lang} = useLocalizer();
     return (
       <button
         className={`${status ?? ''} ${active ? 'active' : ''}`}

@@ -1,12 +1,11 @@
-import {useContext} from 'react';
 import {BsGithub, BsLinkedin, BsTwitter} from 'react-icons/bs';
 import Guess from '../Game/Grid/Guess/Guess';
-import LangContext from '../../context/lang-context';
 import headerL10n from '../../l10n/header-l10n';
 import styled from 'styled-components';
+import useLocalizer from '../Localizer/use-localizer';
 
 const Help = () => {
-  const {lang} = useContext(LangContext);
+  const {lang} = useLocalizer();
   const l10n = headerL10n[lang];
   return (
     <Wrapper>

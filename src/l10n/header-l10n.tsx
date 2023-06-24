@@ -112,14 +112,14 @@ const headerL10n: {[key: string]: LangText} = {
     ],
     credit: (
       <p>
-        This is a multilingual customizable version of Wordle created and
+        This is a multilingual customizable version of Wordle built and
         localized by{' '}
         <a
           href='https://github.com/osb910/polywordle'
           target='_blank'
           rel='noreferrer'
         >
-          Omar
+          <strong>Omar</strong>
         </a>
         .
       </p>
@@ -242,7 +242,7 @@ const headerL10n: {[key: string]: LangText} = {
           target='_blank'
           rel='noreferrer'
         >
-          عُمر
+          <strong>عُمر</strong>
         </a>
         .
       </p>

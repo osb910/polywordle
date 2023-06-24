@@ -2,21 +2,21 @@ import {useContext, useState} from 'react';
 import styled from 'styled-components';
 import {Settings, Info, RefreshCw, RefreshCcw} from 'react-feather';
 import Portal from '../Portal';
-import Modal from '../Modal';
-import Translator from '../Translator';
+import Modal from '../Modal/Modal';
+import Localizer from '../Localizer';
 import IconButton from '../IconButton';
 import SettingsPage from '../SettingsPage/SettingsPage';
 import headerL10n from '../../l10n/header-l10n';
-import LangContext from '../../context/lang-context';
 import languages from '../../l10n/languages';
 import Help from '../Help/Help';
 import GameContext from '../Game/game-context';
 import useTemporary from '../../hooks/use-temporary';
 import SoundToggler from '../SoundToggler/SoundToggler';
+import useLocalizer from '../Localizer/use-localizer';
 // @ts-ignore
 
 const Header = ({className}: {className?: string}) => {
-  const {lang} = useContext(LangContext);
+  const {lang} = useLocalizer();
   const {gameOver, resetGame} = useContext(GameContext);
   const [showSettings, setShowSettings] = useState<boolean>(false);
   const [showHelp, setShowHelp] = useState<boolean>(false);
@@ -34,7 +34,7 @@ const Header = ({className}: {className?: string}) => {
     <header className={className}>
       <h1>{l10n.logo}</h1>
       <section className='settings app'>
-        <Translator langs={languages} />
+        <Localizer langs={languages} />
         <SoundToggler dir={lang === 'ar' ? 'rtl' : 'ltr'} />
       </section>
       <section className='settings game'>

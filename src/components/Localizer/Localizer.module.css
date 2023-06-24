@@ -1,0 +1,68 @@
+.localizer {
+  --sec-color: #a8dadc;
+  --ter-color: #457b9d;
+  --hex-color: #1d3557;
+  --sept-color: #d1dadd75;
+  --border-radius: 6px;
+}
+
+.rtl .currentLang {
+  font-family: Lotus;
+  font-weight: 700;
+  font-size: 1.125rem;
+}
+
+.currentLang {
+  font-weight: 700;
+  padding: 0;
+  margin: 0;
+}
+
+.langs {
+  position: absolute;
+  inset-block-start: 2rem;
+  padding: 0;
+  border: 2px solid var(--sec-color);
+  border-radius: var(--border-radius);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  list-style-type: none;
+  cursor: pointer;
+  box-shadow: 1px 2px 20px rgba(0, 0, 0, 0.2);
+  visibility: hidden;
+  opacity: 0;
+  overflow: hidden;
+  transition: opacity 300ms ease-in-out;
+}
+
+.localizer:hover .langs {
+  visibility: visible;
+  opacity: 1;
+}
+
+.lang {
+  inline-size: 100%;
+  text-align: center;
+  padding-block: 0.5em;
+  padding-inline: 0.5em;
+  background-color: #ffffff75;
+}
+
+.selected {
+  background-color: rgba(200, 200, 200, 0.75);
+  pointer-events: none;
+}
+
+.lang:hover {
+  background-color: var(--sept-color);
+}
+
+.dark .lang {
+  background-color: var(--hex-color);
+}
+
+.dark .lang:hover {
+  background-color: var(--ter-color);
+}

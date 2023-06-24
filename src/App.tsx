@@ -1,14 +1,13 @@
 import Header from './components/Header';
 import Game from './components/Game';
 import './App.css';
-import {useContext} from 'react';
-import LangContext from './context/lang-context';
 import {createGlobalStyle} from 'styled-components';
 import headerL10n from './l10n/header-l10n';
 import useUpdateHead from './hooks/use-update-head';
+import useLocalizer from './components/Localizer/use-localizer';
 
 const App = () => {
-  const {lang} = useContext(LangContext);
+  const {lang} = useLocalizer();
   const l10n = headerL10n[lang];
   useUpdateHead(lang, l10n.title);
   return (

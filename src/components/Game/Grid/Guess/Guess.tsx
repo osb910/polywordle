@@ -3,7 +3,8 @@ import styled, {ThemeProvider} from 'styled-components';
 import {bump, closeGap, flipInX} from '../../../animations/keyframes';
 import GameContext from '../../game-context';
 import {isKashidable, kashidify} from '../../../../lib/utils';
-import LangContext from '../../../../context/lang-context';
+import LangContext from '../../../Localizer/use-localizer';
+import useLocalizer from '../../../Localizer/use-localizer';
 
 type Letter = {
   letter: string;
@@ -17,7 +18,7 @@ interface GuessProps {
 }
 
 const Guess = memo(({word, step, className}: GuessProps) => {
-  const {lang} = useContext(LangContext);
+  const {lang} = useLocalizer();
   const {step: gameStep, gameOver} = useContext(GameContext);
   return (
     <ul
@@ -155,7 +156,7 @@ interface GuessWithContextProps {
 }
 
 const GuessWithContext = ({word, step}: GuessWithContextProps) => {
-  const {lang} = useContext(LangContext);
+  const {lang} = useLocalizer();
   const {lettersPerWord} = useContext(GameContext);
 
   return (

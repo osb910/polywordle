@@ -5,7 +5,7 @@ import Input from '../Input';
 import Button from '../Button/Button';
 import headerL10n from '../../l10n/header-l10n';
 import gameL10n from '../../l10n/game-l10n';
-import LangContext from '../../context/lang-context';
+import useLocalizer from '../Localizer/use-localizer';
 
 type SettingsPageProps = {
   dismiss?: Function;
@@ -14,7 +14,7 @@ type SettingsPageProps = {
 const SettingsPage = ({dismiss}: SettingsPageProps) => {
   const {numOfAttempts, setNumOfAttempts, lettersPerWord, setLettersPerWord} =
     useContext(GameContext);
-  const {lang} = useContext(LangContext);
+  const {lang} = useLocalizer();
   const [newNumOfAttempts, setNewNumOfAttempts] =
     useState<number>(numOfAttempts);
   const [newLettersPerWord, setNewLettersPerWord] =

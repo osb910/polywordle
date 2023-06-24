@@ -1,6 +1,6 @@
 'use client';
 
-import {useEffect, ReactNode} from 'react';
+import {useEffect, ReactNode, useState, useCallback} from 'react';
 import {AlertOctagon, AlertTriangle, CheckCircle, Info, X} from 'react-feather';
 import StyledToast from './StyledToast';
 // @ts-ignore';
@@ -24,15 +24,29 @@ interface ToastProps {
 
 const Toast = ({variant, dismiss, delay = 60000, children}: ToastProps) => {
   const Icon = ICONS_BY_VARIANT[variant];
+  const [exiting, setExiting] = useState<boolean>(false);
+
+  const smoothlyDismiss = useCallback(() => {
+    setExiting(true);
+    const timer = setTimeout(() => {
+      setExiting(false);
+      dismiss();
+    }, 1236);
+    return () => clearTimeout(timer);
+  }, [dismiss]);
+
   useEffect(() => {
     const timeout = setTimeout(() => {
-      dismiss();
+      smoothlyDismiss();
     }, delay);
     return () => clearTimeout(timeout);
-  }, [delay, dismiss]);
+  }, [delay, smoothlyDismiss]);
 
   return (
-    <StyledToast onClick={dismiss} className={`${variant}`}>
+    <StyledToast
+      onClick={smoothlyDismiss}
+      className={`${variant} ${exiting ? 'exiting' : ''}`}
+    >
       <section className={`iconContainer`}>
         <Icon size={24} />
       </section>
@@ -42,7 +56,7 @@ const Toast = ({variant, dismiss, delay = 60000, children}: ToastProps) => {
       </section>
       <button
         className={`closeButton`}
-        onClick={dismiss}
+        onClick={smoothlyDismiss}
         aria-label='Dismiss message'
         aria-live='off'
       >

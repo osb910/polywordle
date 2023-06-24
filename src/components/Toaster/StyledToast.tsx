@@ -1,8 +1,18 @@
 import styled, {css, keyframes} from 'styled-components';
 
-const slideInX = (x: number) => keyframes`
+const slideInX = (x?: number) => keyframes`
   from {
-    transform: translateX(${x}%);
+    transform: translateX(calc(${101 * (x ?? 1)}%));
+  }
+`;
+
+const slideOutX = (x?: number) => keyframes`
+  40% {
+    transform: translateX(${-10 * (x ?? 1)}%);
+  }
+
+  to {
+    transform: translateX(calc(${101 * (x ?? 1)}% + ${2 * (x ?? 1)}rem));
   }
 `;
 
@@ -18,11 +28,19 @@ const Wrapper = styled.li`
   max-width: 100%;
   width: 350px;
   box-shadow: var(--shadow-elevation-medium);
-  animation: ${slideInX(101)} 1s cubic-bezier(0, 0.46, 0, 1.04) both;
+  animation: ${slideInX()} 1s cubic-bezier(0, 0.46, 0, 1.04) both;
   will-change: transform;
 
+  &.exiting {
+    animation-name: ${slideOutX()};
+  }
+
   .rtl & {
-    animation-name: ${slideInX(-101)};
+    animation-name: ${slideInX(-1)};
+  }
+
+  .rtl &.exiting {
+    animation-name: ${slideOutX(-1)};
   }
 
   & .content {

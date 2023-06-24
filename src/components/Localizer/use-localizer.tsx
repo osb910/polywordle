@@ -1,11 +1,11 @@
-import {createContext, useState, useEffect, ReactNode} from 'react';
+import {createContext, useState, useEffect, useContext, ReactNode} from 'react';
 
-interface LangContextProps {
+interface L10nContextProps {
   lang: string;
   translate: (lang: string) => void;
 }
 
-const LangContext = createContext<LangContextProps>({
+const L10nContext = createContext<L10nContextProps>({
   lang: '',
   translate: () => {},
 });
@@ -14,7 +14,7 @@ const storedState = localStorage.getItem('lang');
 
 const initialState: string = storedState ? JSON.parse(storedState) : 'en';
 
-export const LangProvider = ({
+export const L10nProvider = ({
   children,
 }: {
   children: ReactNode;
@@ -26,10 +26,19 @@ export const LangProvider = ({
   const translate = (newLang: string): void => setLang(newLang);
 
   return (
-    <LangContext.Provider value={{lang, translate}}>
+    <L10nContext.Provider value={{lang, translate}}>
       {children}
-    </LangContext.Provider>
+    </L10nContext.Provider>
   );
 };
 
-export default LangContext;
+const useLocalizer = () => {
+  const data = useContext(L10nContext);
+
+  if (!data)
+    throw new Error('Cannot consume Lang context without a L10nProvider');
+
+  return data;
+};
+
+export default useLocalizer;

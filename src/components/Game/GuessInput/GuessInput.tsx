@@ -9,7 +9,6 @@ import {
 } from 'react';
 import styled from 'styled-components';
 import GameContext from '../game-context';
-import LangContext from '../../../context/lang-context';
 import {ClickEvent} from './Keyboard/KeyButton';
 import Keyboard from './Keyboard';
 import Button from '../../Button';
@@ -25,6 +24,7 @@ import useToaster from '../../Toaster/use-toaster';
 // @ts-ignore
 import useSound from 'use-sound';
 import useSoundEnabled from '../../SoundToggler/sound-enabled';
+import useLocalizer from '../../Localizer/use-localizer';
 
 interface GuessInputProps {
   className?: string;
@@ -33,7 +33,7 @@ interface GuessInputProps {
 const GuessInput = ({className}: GuessInputProps) => {
   const [guessInput, setGuessInput] = useState<string>('');
   const [evaluating, setEvaluating] = useState<boolean>(false);
-  const {lang} = useContext(LangContext);
+  const {lang} = useLocalizer();
   const {createToast} = useToaster();
   const {
     guesses,

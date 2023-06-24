@@ -1,6 +1,6 @@
 import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
-import {LangProvider} from './context/lang-context.tsx';
+import {L10nProvider} from './components/Localizer/use-localizer.tsx';
 import {GameProvider} from './components/Game/game-context.tsx';
 import GlobalStyles from './components/GlobalStyles.tsx';
 import App from './App.tsx';
@@ -11,7 +11,7 @@ const root = createRoot(document.querySelector('#root') as HTMLElement);
 
 root.render(
   <StrictMode>
-    <LangProvider>
+    <L10nProvider>
       <SoundProvider>
         <ToastProvider>
           <GameProvider>
@@ -20,6 +20,6 @@ root.render(
           </GameProvider>
         </ToastProvider>
       </SoundProvider>
-    </LangProvider>
+    </L10nProvider>
   </StrictMode>
 );
