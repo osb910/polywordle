@@ -1,4 +1,4 @@
-import {BsGithub, BsLinkedin, BsTwitter} from 'react-icons/bs';
+import {BsGithub} from 'react-icons/bs';
 import Guess from '../Game/Grid/Guess/Guess';
 import headerL10n from '../../l10n/header-l10n';
 import styled from 'styled-components';
