@@ -27,23 +27,27 @@ const Help = () => {
       <section className='credit'>
         {l10n.credit}
         <p className='social-links'>
-          <a href='https://github.com/osb910' target='_blank' rel='noreferrer'>
+          <a
+            href='https://github.com/osb910/polywordle'
+            target='_blank'
+            rel='noreferrer'
+          >
             <BsGithub />
           </a>
-          <a
+          {/* <a
             href='https://linkedin.com/in/osbdev'
             target='_blank'
             rel='noreferrer'
           >
             <BsLinkedin />
-          </a>
-          <a
+          </a> */}
+          {/* <a
             href='https://twitter.com/omarshdev'
             target='_blank'
             rel='noreferrer'
           >
             <BsTwitter />
-          </a>
+          </a> */}
         </p>
       </section>
     </Wrapper>

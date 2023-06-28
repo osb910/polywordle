@@ -15,7 +15,7 @@ const headerL10n: {[key: string]: LangText} = {
     howToPlay: 'How To Play',
     gameRules: [
       'Guess the wordle in a given number of tries, usually 6.',
-      'Each guess must be a valid word with a certain number of letters.',
+      'Each guess must be a valid word with a certain number of letters, usually 5.',
       'The color of the tiles will change to show how close your guess was to the word.',
       'You can change the number of tries and letters per word ⚙️.',
       'You can play in English or Arabic 🌐.',
@@ -114,11 +114,7 @@ const headerL10n: {[key: string]: LangText} = {
       <p>
         This is a multilingual customizable version of Wordle built and
         localized by{' '}
-        <a
-          href='https://github.com/osb910/polywordle'
-          target='_blank'
-          rel='noreferrer'
-        >
+        <a href='https://github.com/osb910' target='_blank' rel='noreferrer'>
           <strong>Omar</strong>
         </a>
         .
@@ -138,8 +134,8 @@ const headerL10n: {[key: string]: LangText} = {
     language: 'اللغة',
     howToPlay: 'طريقة اللعب',
     gameRules: [
-      'خمِّن الوِرد في عدد من المحاولات أوسطها ستة.',
-      'لا بد للتخمينة أن تكون كلمة صحيحة من عدد من الأحرف.',
+      'خمِّن الوِرد في عدد من المحاولات، والأصل أنها ستة.',
+      'لا بد للتخمينة أن تكون كلمة صحيحة من عدد من الأحرف، والأصل أنها خمسة.',
       'يتغير لون كل خانة بحسب قرب تخمينك من الكلمة.',
       'تستطيع تغيير عدد المحاولات وعدد أحرف الكلمة لكل لعبة ⚙️.',
       'يسعك أن تلعب بالعربية والإنجليزية 🌐.',
@@ -237,11 +233,7 @@ const headerL10n: {[key: string]: LangText} = {
     credit: (
       <p>
         هذه نسخة من لعبة الوِرد متعددة اللغات والخيارات، قام بإنشائها وتوطينها{' '}
-        <a
-          href='https://github.com/osb910/polywordle'
-          target='_blank'
-          rel='noreferrer'
-        >
+        <a href='https://github.com/osb910' target='_blank' rel='noreferrer'>
           <strong>عُمر</strong>
         </a>
         .

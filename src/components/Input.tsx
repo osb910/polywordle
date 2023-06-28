@@ -1,4 +1,4 @@
-import {useId, ChangeEvent} from 'react';
+import {useId, ChangeEvent, ReactNode} from 'react';
 import styled from 'styled-components';
 
 export interface InputProps {
@@ -7,6 +7,7 @@ export interface InputProps {
   className?: string;
   type?: string;
   setInput?: Function;
+  children?: ReactNode;
   [x: string]: any;
 }
 
@@ -16,6 +17,7 @@ const Input = ({
   className,
   type = 'text',
   setInput,
+  children,
   ...delegated
 }: InputProps) => {
   const generatedId = useId();
@@ -33,6 +35,7 @@ const Input = ({
         type={type}
         id={appliedId}
       />
+      {children}
     </Wrapper>
   );
 };

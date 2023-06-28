@@ -52,7 +52,7 @@ const SettingsPage = ({dismiss}: SettingsPageProps) => {
           label={l10n.lettersPerWord}
           type='number'
           id='lettersPerWord'
-          min={4}
+          min={3}
           max={7}
           value={newLettersPerWord}
           setInput={setNewLettersPerWord}
