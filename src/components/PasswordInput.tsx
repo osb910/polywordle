@@ -6,6 +6,7 @@ import {Eye, EyeOff} from 'react-feather';
 interface PasswordInputProps {}
 
 const PasswordInput = ({}: PasswordInputProps) => {
+  // @ts-ignore
   const [showPassword, setShowPassword] = useState<boolean>(false);
   return (
     <Input label='Password' type='password' id='password'>
