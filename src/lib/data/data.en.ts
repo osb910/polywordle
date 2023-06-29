@@ -1860,7 +1860,7 @@ const englishWordles = {
     'RUPEE',
     'RURAL',
     'RUSTY',
-    'Razor',
+    'RAZOR',
     'SADLY',
     'SAFER',
     'SAINT',

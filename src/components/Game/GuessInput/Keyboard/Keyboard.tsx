@@ -38,7 +38,7 @@ const Keyboard = memo(({className, onClick, lang}: KeyboardProps) => {
         }
         setBoardStatus(alphabet);
       },
-      step === 1 && !gameOver ? 0 : 2000
+      step === 1 && !gameOver ? 0 : lettersPerWord * 400 + 400
     );
 
     return () => clearInterval(timeoutId);

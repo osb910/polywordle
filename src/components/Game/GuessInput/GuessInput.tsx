@@ -51,10 +51,20 @@ const GuessInput = ({className}: GuessInputProps) => {
   } = useContext(GameContext);
   const id = useId();
   const {soundEnabled} = useSoundEnabled();
-  const [playShuffle] = useSound('/shuffling-cards.mp3', {
+  const [playShuffle] = useSound('/sfx/shuffle-cards.mp3', {
     soundEnabled,
     playbackRate: 0.9,
     volume: 0.5,
+    sprite: {
+      shuffle_3: [0, 3 * 400],
+      shuffle_4: [0, 4 * 400],
+      shuffle_5: [0, 5 * 400],
+      shuffle_6: [0, 6 * 400],
+      shuffle_7: [0, 7 * 400],
+      shuffle_8: [0, 8 * 400],
+      shuffle_9: [0, 9 * 400],
+      shuffle_10: [0, 10 * 400],
+    },
   });
   const [playCongrats] = useSound('/fanfare.mp3', {
     soundEnabled,
@@ -126,7 +136,7 @@ const GuessInput = ({className}: GuessInputProps) => {
     const newGuesses = addGuess(guesses, word, step);
     setGuesses(newGuesses);
 
-    playShuffle();
+    playShuffle({id: `shuffle_${word!.length}`});
     setEvaluating(true);
     setGuessInput('');
     const timeoutId = setTimeout(() => {
