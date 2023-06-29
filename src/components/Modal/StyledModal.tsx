@@ -39,18 +39,43 @@ export const disappear = keyframes`
   }
 `;
 
+export const blurIn = keyframes`
+  0% {
+    backdrop-filter: blur(0);
+  }
+
+  100% {
+    backdrop-filter: blur(3px);
+  }
+`;
+
+export const blurOut = keyframes`
+  0% {
+    backdrop-filter: blur(3px);
+  }
+
+  100% {
+    backdrop-filter: blur(0);
+  }
+`;
+
 const Wrapper = styled.aside`
   position: fixed;
   inset: 0;
   display: grid;
   place-content: center;
   padding: 1em;
-  transition: all 400ms ease-in-out;
+  /* transition: all 400ms ease-in-out; */
 
   & .backdrop {
     position: absolute;
     inset: 0;
-    background: hsl(0deg 0% 0% / 0.75);
+    background: hsl(0deg 0% 0% / 0.5);
+    animation: ${blurIn} 600ms ease-out both;
+  }
+
+  & .backdrop.exiting {
+    animation: ${blurOut} 600ms ease-in;
   }
 
   & .modal {
@@ -71,7 +96,7 @@ const Wrapper = styled.aside`
     font-family: 'Calibri', sans-serif;
   }
 
-  & .exiting {
+  & .modal.exiting {
     animation: ${disappear} 600ms ease-in both;
   }
 

@@ -21,13 +21,14 @@ const Modal = ({
   lang,
 }: ModalProps) => {
   const [exiting, setExiting] = useState<boolean>(false);
+  const animationDuration = 618;
 
   const smoothlyDismiss = useCallback(() => {
     setExiting(true);
     const timer = setTimeout(() => {
       setExiting(false);
       dismiss();
-    }, 618);
+    }, animationDuration);
     return () => clearTimeout(timer);
   }, [dismiss]);
 
@@ -39,11 +40,18 @@ const Modal = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [dismiss]);
 
+  const style: {[key: string]: any} = {
+    '--animation-duration': animationDuration,
+  };
+
   return (
     <FocusLock returnFocus={true}>
       <RemoveScroll>
-        <Wrapper>
-          <div className='backdrop' onClick={smoothlyDismiss} />
+        <Wrapper style={style}>
+          <div
+            className={`backdrop ${exiting ? 'exiting' : ''}`}
+            onClick={smoothlyDismiss}
+          />
           <div
             className={`modal ${exiting ? 'exiting' : ''} ${
               lang === 'ar' ? 'rtl' : 'ltr'

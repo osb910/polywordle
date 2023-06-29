@@ -207,6 +207,17 @@ const GlobalStyles = createGlobalStyle`
     border-spacing: 0;
   }
 
+  :root {
+    --foreground-rgb: 0, 0, 0;
+    --background-start-rgb: 214, 219, 220;
+    --background-end-rgb: 255, 255, 255;
+    --bg-default-rgb: 31, 33, 37;
+    --bg-elevated-rgb: 52, 58, 64;
+    --bg-dark-rgb: 1, 35, 70;
+    --color-primary-rgb: 231, 233, 234;
+    --color-accent-rgb: 214, 166, 1;
+  }
+
   /* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
   @media (prefers-reduced-motion: reduce) {
     html:focus-within {

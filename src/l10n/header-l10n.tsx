@@ -112,8 +112,8 @@ const headerL10n: {[key: string]: LangText} = {
     ],
     credit: (
       <p>
-        This is a multilingual customizable version of Wordle built and
-        localized by{' '}
+        This is a bilingual customizable version of Wordle built and localized
+        by{' '}
         <a href='https://github.com/osb910' target='_blank' rel='noreferrer'>
           <strong>Omar</strong>
         </a>
@@ -232,7 +232,8 @@ const headerL10n: {[key: string]: LangText} = {
     ],
     credit: (
       <p>
-        هذه نسخة من لعبة الوِرد متعددة اللغات والخيارات، قام بإنشائها وتوطينها{' '}
+        هذه نسخة من لعبة الوِرد ثنائية اللغة ومتعددة الخيارات، قام بإنشائها
+        وتوطينها{' '}
         <a href='https://github.com/osb910' target='_blank' rel='noreferrer'>
           <strong>عُمر</strong>
         </a>

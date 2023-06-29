@@ -1,6 +1,4 @@
-import styled, {keyframes} from 'styled-components';
-
-const bump = keyframes`
+@keyframes bump {
   0% {
     transform: scale(1) rotate(var(--rotation-deg));
   }
@@ -16,9 +14,9 @@ const bump = keyframes`
   100% {
     transform: scale(1) rotate(var(--rotation-deg));
   }
-`;
+}
 
-const Wrapper = styled.button`
+.button {
   --sec-color: #a8dadc;
   --ter-color: #457b9d;
   --hex-color: #1d3557;
@@ -44,70 +42,84 @@ const Wrapper = styled.button`
   color: var(--hex-color);
   box-shadow: 0px 2px 20px rgba(var(--bg-elevated-rgb) 0.15);
   transition: all 200ms ease-in-out;
-  border: 3px solid hsl(0deg 0% 85%);
+  border: 2px solid hsl(0deg 0% 85%);
   border-block-start-color: var(--border-top-color);
   border-inline-start-color: var(--border-top-color);
   border-block-end-color: var(--border-bottom-color);
   border-inline-end-color: var(--border-bottom-color);
   transform: rotate(var(--rotation-deg));
   background: hsl(0deg 0% 93%);
+}
 
-  &:active {
-    border-block-start-color: var(--border-bottom-color);
-    border-inline-start-color: var(--border-bottom-color);
-    border-block-end-color: var(--border-top-color);
-    border-inline-end-color: var(--border-top-color);
-    background: hsl(0deg 0% 85%);
-  }
+.button:active {
+  border-block-start-color: var(--border-bottom-color);
+  border-inline-start-color: var(--border-bottom-color);
+  border-block-end-color: var(--border-top-color);
+  border-inline-end-color: var(--border-top-color);
+  background: hsl(0deg 0% 85%);
+}
 
-  &:where(:hover, :focus) {
-    transform: scale(1.08) rotate(var(--rotation-deg));
-  }
+.button:where(:hover, :focus) {
+  transform: scale(1.08) rotate(var(--rotation-deg));
+}
 
-  .rtl &,
-  [dir='rtl'] & {
-    --rotation-deg: -45deg;
-  }
+.rtl .button,
+[dir='rtl'] .button {
+  --rotation-deg: -45deg;
+}
 
-  .rtl & svg,
-  [dir='rtl'] & svg {
-    --rotation-deg: 135deg;
-  }
+.rtl .button svg,
+[dir='rtl'] .button svg {
+  --rotation-deg: 135deg;
+}
 
-  & svg {
-    width: 1.25rem;
-    margin: 0;
-    stroke: var(--hex-color);
-    stroke: rgb(var(--bg-elevated-rgb));
-    border-radius: 50%;
-    transform: rotate(calc(var(--rotation-deg) * -1));
-  }
+.button svg {
+  width: 1.25rem;
+  margin: 0;
+  stroke: var(--hex-color);
+  stroke: rgb(var(--bg-elevated-rgb));
+  border-radius: 50%;
+  transform: rotate(calc(var(--rotation-deg) * -1));
+}
 
-  .dark & {
-    color: var(--sept-color);
-  }
+.dark .button {
+  color: var(--sept-color);
+}
 
-  &.bump {
-    animation: ${bump} 350ms ease-in-out;
-  }
+.button.bump {
+  animation: bump 350ms ease-in-out;
+}
 
-  @media (min-width: 24rem) {
+.button > *:not(svg) {
+  transform: rotate(calc(var(--rotation-deg) * -1)) translate(55%, 20%);
+}
+
+.rtl .button > *:not(svg),
+[dir='rtl'] .button > *:not(svg) {
+  transform: rotate(calc(var(--rotation-deg) * -1)) translate(-55%, 20%);
+}
+
+@media (min-width: 24rem) {
+  .button {
     --size: 2rem;
-    & svg {
-      width: 1.5rem;
-    }
   }
+  .button svg {
+    width: 1.5rem;
+  }
+}
 
-  @media (min-width: 48rem) {
+@media (min-width: 48rem) {
+  .button {
     --size: 2.25rem;
   }
+}
 
-  @media (min-width: 72rem) {
+@media (min-width: 72rem) {
+  .button {
     --size: 2.5rem;
-    & svg {
-      width: 1.75rem;
-    }
   }
-`;
 
-export default Wrapper;
+  .button svg {
+    width: 1.75rem;
+  }
+}
